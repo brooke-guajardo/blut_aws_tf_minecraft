@@ -25,6 +25,18 @@ resource "aws_ecs_task_definition" "minecraft_server" {
         {
           name  = "EULA"
           value = "TRUE"
+        },
+        {
+          name = "TYPE"
+          value = "AUTO_CURSEFORGE"
+        },
+        {
+          name = "CF_API_KEY"
+          value = data.aws_secretsmanager_secret.curseforge.arn
+        },
+        {
+          name = "CF_PAGE_URL"
+          value = "https://www.curseforge.com/minecraft/modpacks/all-the-mods-8"
         }
       ]
       mountPoints   = [
