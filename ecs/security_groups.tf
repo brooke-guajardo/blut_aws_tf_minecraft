@@ -6,8 +6,8 @@ resource "aws_security_group" "minecraft_sg" {
  # need to whitelist CIDR's from discord only, dont like this being open to everyone
   ingress {
     description = "rule for inbound access"
-    from_port   = 25565
-    to_port     = 25565
+    from_port   = var.port
+    to_port     = var.port
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }

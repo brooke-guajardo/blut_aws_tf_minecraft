@@ -4,6 +4,11 @@ variable "cpu" {
 }
 
 variable "memory" {
-  description = "default amount of CPU to give to ecs"
+  description = "default amount of memory to give to ecs"
   default = 8192
+}
+
+variable "port" {
+  description = "default container port"
+  default = 25565
 }
