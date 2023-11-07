@@ -27,12 +27,16 @@ resource "aws_ecs_task_definition" "minecraft_server" {
           value = "TRUE"
         },
         {
+          name = "VERSION"
+          value = "1.19.2"
+        },
+        {
           name = "TYPE"
           value = "AUTO_CURSEFORGE"
         },
         {
           name = "CF_API_KEY"
-          value = data.aws_secretsmanager_secret.curseforge.arn
+          value = data.aws_secretsmanager_secret.curseforge.arn # this isnt the secret value
         },
         {
           name = "CF_PAGE_URL"
