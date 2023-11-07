@@ -16,8 +16,8 @@ resource "aws_ecs_task_definition" "minecraft_server" {
       essential     = true
       portMappings  = [
         {
-          containerPort = 25565
-          hostPort      = 25565
+          containerPort = var.port
+          hostPort      = var.port
           protocol      = "tcp"
         }
       ]
