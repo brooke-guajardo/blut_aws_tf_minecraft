@@ -63,7 +63,7 @@ resource "aws_ecs_service" "minecraft_server" {
   desired_count   = 1
   network_configuration {
     subnets          = module.vpc.public_subnets
-    security_groups  = [aws_security_group.minecraft_server.id]
+    security_groups  = [aws_security_group.minecraft_sg.id]
     assign_public_ip = true
   }
   launch_type = "FARGATE"
