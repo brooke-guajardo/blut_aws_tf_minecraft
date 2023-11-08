@@ -12,7 +12,7 @@ resource "aws_ecs_task_definition" "minecraft_server" {
   container_definitions = jsonencode([
     {
       name          = "minecraft-server"
-      image         = "itzg/minecraft-server:latest"
+      image         = "itzg/minecraft-server:java17-alpine"
       essential     = true
       tty           = true
       stdin_open    = true
