@@ -12,3 +12,12 @@ variable "port" {
   description = "default container port"
   default = 25565
 }
+
+variable "region" {
+  description = "default aws region"
+  default = "us-east-1"
+}
+
+variable "cf_api_key" {
+  description = "curseforge API key, given during run time"
+}
