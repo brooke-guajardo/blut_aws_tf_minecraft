@@ -19,7 +19,7 @@ data "aws_iam_policy_document" "mc_role_doc" {
   statement {
     actions = [ "kms:Decrypt" ]
 
-    resources = data.aws_kms_alias.curseforge.arn
+    resources = [data.aws_kms_alias.curseforge.arn]
   }
   statement {
     actions = [ 
@@ -27,7 +27,7 @@ data "aws_iam_policy_document" "mc_role_doc" {
       "secretsmanager:DescribeSecret"
       ]
 
-    resources = data.aws_secretsmanager_secret.curseforge.arn
+    resources = [data.aws_secretsmanager_secret.curseforge.arn]
   }
 }
 
