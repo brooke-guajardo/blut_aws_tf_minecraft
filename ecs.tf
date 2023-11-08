@@ -14,6 +14,9 @@ resource "aws_ecs_task_definition" "minecraft_server" {
       name          = "minecraft-server"
       image         = "itzg/minecraft-server:latest"
       essential     = true
+      tty           = true
+      stdin_open    = true
+      restart       = "unless-stopped"
       portMappings  = [
         {
           containerPort = var.port
