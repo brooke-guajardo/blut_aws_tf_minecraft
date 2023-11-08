@@ -16,6 +16,19 @@ data "aws_iam_policy_document" "mc_role_doc" {
 
     resources = ["arn:aws:s3:::minecraft*"]
   }
+  statement {
+    actions = [ "kms:Decrypt" ]
+
+    resources = data.aws_kms_alias.curseforge.arn
+  }
+  statement {
+    actions = [ 
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret"
+      ]
+
+    resources = data.aws_secretsmanager_secret.curseforge.arn
+  }
 }
 
 resource "aws_iam_role" "ecs_tasks_execution_role" {
