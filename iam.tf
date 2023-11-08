@@ -1,4 +1,4 @@
-data "aws_iam_policy_document" "mc_role_doc" {
+data "aws_iam_policy_document" "ecs_tasks_execution_role" {
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -7,31 +7,14 @@ data "aws_iam_policy_document" "mc_role_doc" {
       identifiers = ["ecs-tasks.amazonaws.com"]
     }
   }
-  statement {
-    actions = [
-        "s3:List*",
-        "s3:Get*",
-        "s3:Put*",
-    ]
-
-    resources = ["arn:aws:s3:::minecraft*"]
-  }
-  statement {
-    actions = [ "kms:Decrypt" ]
-
-    resources = [data.aws_kms_alias.curseforge.arn]
-  }
-  statement {
-    actions = [ 
-      "secretsmanager:GetSecretValue",
-      "secretsmanager:DescribeSecret"
-      ]
-
-    resources = [data.aws_secretsmanager_secret.curseforge.arn]
-  }
 }
 
 resource "aws_iam_role" "ecs_tasks_execution_role" {
   name               = "ecs-task-execution-role"
-  assume_role_policy = "${data.aws_iam_policy_document.mc_role_doc.json}"
+  assume_role_policy = "${data.aws_iam_policy_document.ecs_tasks_execution_role.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_tasks_execution_role" {
+  role       = "${aws_iam_role.ecs_tasks_execution_role.name}"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
