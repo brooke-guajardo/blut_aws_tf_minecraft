@@ -1,5 +1,14 @@
 # blut_aws_tf_minecraft
 
+## Build image with non-auto download files copied over
+```bash
+
+cd build
+docker build . -t jardo_minecraft
+```
+
+
+
 ## Terraform
 ```bash
 # env vars set NOT RECOMMMENDED
