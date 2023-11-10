@@ -50,6 +50,14 @@ resource "aws_ecs_task_definition" "minecraft_server" {
           value = "No cover charge, 2 drink minimum."
         },
         {
+          name = SNOOPER_ENABLED
+          value = "FALSE"
+        },
+        {
+          name = "WORLDS"
+          value = "/data/world/DevOps_Yearn_for_the_Mines.zip"
+        },
+        {
           name = "CF_API_KEY"
           value = var.cf_api_key
         },
