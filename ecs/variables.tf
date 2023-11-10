@@ -24,3 +24,7 @@ variable "region" {
 }
 
 data "aws_caller_identity" "current" {}
+
+variable "cf_api_key" {
+  description = "api key from curseforge, provided during apply"
+}

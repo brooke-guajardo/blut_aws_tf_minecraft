@@ -50,6 +50,10 @@ resource "aws_ecs_task_definition" "minecraft_server" {
           value = "No cover charge, 2 drink minimum."
         },
         {
+          name = "CF_API_KEY"
+          value = var.cf_api_key
+        },
+        {
           name = "CF_EXCLUDE_MODS"
           value = "snow-under-trees-remastered,fix-experience-bug,sparse-structures,structory-towers,structory,packet-fixer,all-the-wizard-gear,towers-of-the-wild-modded"
         },
