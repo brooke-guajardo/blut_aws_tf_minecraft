@@ -5,7 +5,7 @@ variable "cpu" {
 
 variable "memory" {
   description = "default amount of memory to give to ecs"
-  default = 16384
+  default = 32768
 }
 
 variable "memory_env_var" {
