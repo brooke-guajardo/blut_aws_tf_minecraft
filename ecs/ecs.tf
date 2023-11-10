@@ -50,7 +50,7 @@ resource "aws_ecs_task_definition" "minecraft_server" {
           value = "No cover charge, 2 drink minimum."
         },
         {
-          name = SNOOPER_ENABLED
+          name = "SNOOPER_ENABLED"
           value = "FALSE"
         },
         {
