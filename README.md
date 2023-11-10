@@ -1,4 +1,4 @@
-# blut_aws_tf_minecraft
+# blut_aws_tf_minecraft fargate instructions
 
 ## Build image with non-auto download files copied over
 ```bash
@@ -28,3 +28,12 @@ terraform apply
 - https://github.com/tfutils/tfenv
 
 
+# Client instructions
+- Install CurseForge: https://www.curseforge.com/download/app
+- Install ATM9 with the zip file 
+- This should make a new entry under the 'My Modpacks' tab in your CurseForge app, click play on the top left :p
+- This should bring up your MC launcher, use java edition
+- The screen may look red and scary, don't be afraid Andi
+- Once launcher has loaded click MULTIPLAYER
+- Select direct connect and put IP without port (I'll provide from AWS console)
+- done :tada:
