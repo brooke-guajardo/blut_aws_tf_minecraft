@@ -33,8 +33,10 @@ resource "aws_security_group" "minecraft_efs_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    security_groups = flatten([module.vpc.public_subnets])
+    security_groups = aws_security_group.minecraft_sg.id
   }
  
  # No egress needed for EFS
+
+ depends_on = [aws_security_group.minecraft_sg]
 }
