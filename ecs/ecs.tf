@@ -77,7 +77,6 @@ resource "aws_ecs_task_definition" "minecraft_server" {
       root_directory = "/data"
       authorization_config {
         access_point_id = aws_efs_access_point.minecraft_efs_ap.id
-        iam             = "ENABLED"
       }
     }
   }
