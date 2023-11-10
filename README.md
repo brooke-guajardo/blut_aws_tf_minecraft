@@ -39,7 +39,7 @@ terraform apply
 
 # Client instructions
 - Install CurseForge: https://www.curseforge.com/download/app
-- Install ATM9 with the zip file 
+- Install ATM9 with the zip file version `All the Mods 9-0.2.15` link [here](https://www.curseforge.com/minecraft/modpacks/all-the-mods-9/files?page=1&pageSize=20)
 - This should make a new entry under the 'My Modpacks' tab in your CurseForge app, click play on the top left :p
 - This should bring up your MC launcher, use java edition
 - The screen may look red and scary, don't be afraid Andi
