@@ -49,6 +49,7 @@ terraform apply
 - https://medium.com/@ilia.lazebnik/attaching-an-efs-file-system-to-an-ecs-task-7bd15b76a6ef
 - https://stackoverflow.com/questions/65134711/error-incorrect-attribute-value-type-module-network-private-subnets0-is-tuple
 - https://docs.aws.amazon.com/efs/latest/ug/accessing-fs-create-security-groups.html
+- https://shisho.dev/dojo/providers/aws/Amazon_EFS/aws-efs-access-point/
 
 
 # Client instructions
