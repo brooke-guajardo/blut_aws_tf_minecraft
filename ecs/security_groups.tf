@@ -27,13 +27,12 @@ resource "aws_security_group" "minecraft_efs_sg" {
   description = "minecraft efs security group for ingress"
   vpc_id      =  module.vpc.vpc_id
  
- # ingress from ecs only
+ # ingress from ecs only to NFS port
   ingress {
     description = "rule for inbound efs access"
     from_port   = 2049
     to_port     = 2049
     protocol    = "tcp"
-    #security_groups = [aws_security_group.minecraft_sg.id]
     cidr_blocks = module.vpc.public_subnets_cidr_blocks
   }
  
