@@ -89,6 +89,7 @@ resource "aws_ecs_task_definition" "minecraft_server" {
       }
     }
   }
+  depends_on = [ aws_efs_access_point.minecraft_efs_ap ]
 }
 
 resource "aws_ecs_service" "minecraft_server" {
