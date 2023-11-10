@@ -3,7 +3,7 @@ resource "aws_security_group" "minecraft_sg" {
   description = "minecraft security group for ingress/egress"
   vpc_id      =  module.vpc.vpc_id
  
- # need to whitelist CIDR's from discord only, dont like this being open to everyone
+ # Using RCON player whitelist so not whitelisting CIDRs here, but wouldnt hurt to do tbh
   ingress {
     description = "rule for inbound access"
     from_port   = var.port
@@ -20,4 +20,20 @@ resource "aws_security_group" "minecraft_sg" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
+}
+
+resource "aws_security_group" "minecraft_efs_sg" {
+  name        = "minecraft_efs_sg"
+  description = "minecraft efs security group for ingress"
+  vpc_id      =  module.vpc.vpc_id
+ 
+  ingress {
+    description = "rule for inbound efs access"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [module.vpc.public_subnets]
+  }
+ 
+ # No egress needed for EFS
 }
