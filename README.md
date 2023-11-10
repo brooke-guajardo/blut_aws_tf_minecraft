@@ -1,4 +1,4 @@
-# blut_aws_tf_minecraft fargate instructions
+# Fargate Instructions
 
 ## Create ECR
 ```bash
@@ -37,6 +37,16 @@ terraform init
 terraform apply
 ```
 
+# Client instructions
+- Install CurseForge: https://www.curseforge.com/download/app
+- Install ATM9 with the zip file 
+- This should make a new entry under the 'My Modpacks' tab in your CurseForge app, click play on the top left :p
+- This should bring up your MC launcher, use java edition
+- The screen may look red and scary, don't be afraid Andi
+- Once launcher has loaded click MULTIPLAYER
+- Select direct connect and put IP without port (I'll provide from AWS console)
+- done :tada:
+
 ## References
 - https://hub.docker.com/r/itzg/minecraft-server/tags
 - https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
@@ -50,14 +60,3 @@ terraform apply
 - https://stackoverflow.com/questions/65134711/error-incorrect-attribute-value-type-module-network-private-subnets0-is-tuple
 - https://docs.aws.amazon.com/efs/latest/ug/accessing-fs-create-security-groups.html
 - https://shisho.dev/dojo/providers/aws/Amazon_EFS/aws-efs-access-point/
-
-
-# Client instructions
-- Install CurseForge: https://www.curseforge.com/download/app
-- Install ATM9 with the zip file 
-- This should make a new entry under the 'My Modpacks' tab in your CurseForge app, click play on the top left :p
-- This should bring up your MC launcher, use java edition
-- The screen may look red and scary, don't be afraid Andi
-- Once launcher has loaded click MULTIPLAYER
-- Select direct connect and put IP without port (I'll provide from AWS console)
-- done :tada:
