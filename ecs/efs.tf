@@ -12,6 +12,11 @@ resource "aws_efs_access_point" "minecraft_efs_ap" {
   }
   root_directory {
     path = "/data"
+    creation_info {
+      owner_gid = 1000
+      owner_uid = 1000
+      permissions = 755
+    }
   }
 }
 
