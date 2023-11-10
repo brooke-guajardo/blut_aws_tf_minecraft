@@ -21,9 +21,10 @@ export AWS_REGION=your_aws_region
 
 cd build
 docker build . -t jardo_minecraft:v1.0.0
-docker image ls # to confirm it was made properly
-docker tag jardo_minecraft:v1.0.0 "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com/minecraft
-docker push "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com/minecraft
+docker image ls # to confirm it was made properly, get the IMAGE ID
+aws ecr get-login-password --region "${AWS_REGION}" | docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com
+docker tag IMAGE_ID "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com/minecraft:v1.0.0
+docker push "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com/minecraft:v1.0.0
 ```
 
 ## Terraform
@@ -44,6 +45,7 @@ terraform apply
 - https://banhawy.medium.com/3-ways-to-configure-terraform-to-use-your-aws-account-fb00a08ded5
 - https://github.com/tfutils/tfenv
 - https://docs.aws.amazon.com/AmazonECR/latest/userguide/getting-started-cli.html
+- https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html
 
 
 # Client instructions
