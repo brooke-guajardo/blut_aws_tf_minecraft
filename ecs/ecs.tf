@@ -12,7 +12,7 @@ resource "aws_ecs_task_definition" "minecraft_server" {
   container_definitions = jsonencode([
     {
       name          = "minecraft-server"
-      image         = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com/minecraft:latest"
+      image         = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com/minecraft:v1.2.0"
       essential     = true
       tty           = true
       stdin_open    = true
