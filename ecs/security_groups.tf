@@ -34,7 +34,7 @@ resource "aws_security_group" "minecraft_efs_sg" {
     to_port     = 2049
     protocol    = "tcp"
     #security_groups = [aws_security_group.minecraft_sg.id]
-    cidr_blocks = [module.vpc.public_subnets_cidr_blocks]
+    cidr_blocks = module.vpc.public_subnets_cidr_blocks
   }
  
  # No egress needed for EFS
