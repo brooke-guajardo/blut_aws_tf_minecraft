@@ -54,7 +54,7 @@ resource "aws_ecs_task_definition" "minecraft_server" {
           value = "FALSE"
         },
         {
-          name = "WORLDS"
+          name = "LEVEL"
           value = "/data/world/DevOps_Yearn_for_the_Mines.zip"
         },
         {
