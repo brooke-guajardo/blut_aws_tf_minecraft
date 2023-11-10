@@ -55,7 +55,7 @@ resource "aws_ecs_task_definition" "minecraft_server" {
         },
         {
           name = "LEVEL"
-          value = "/data/world/DevOps_Yearn_for_the_Mines.zip"
+          value = "DevOps_Yearn_for_the_Mines.zip"
         },
         {
           name = "CF_API_KEY"
