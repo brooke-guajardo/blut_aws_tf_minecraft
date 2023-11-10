@@ -12,8 +12,11 @@ resource "aws_ecs_task_definition" "minecraft_server" {
   container_definitions = jsonencode([
     {
       name          = "minecraft-server"
-      image         = "itzg/minecraft-server:latest"
+      image         = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com/minecraft:v1.2.0"
       essential     = true
+      tty           = true
+      stdin_open    = true
+      restart       = "unless-stopped"
       portMappings  = [
         {
           containerPort = var.port
@@ -28,31 +31,55 @@ resource "aws_ecs_task_definition" "minecraft_server" {
         },
         {
           name = "VERSION"
-          value = "1.19.2"
+          value = "1.20.1"
         },
         {
           name = "TYPE"
           value = "AUTO_CURSEFORGE"
         },
-        # {
-        #   name = "CF_API_KEY"
-        #   value = data.aws_secretsmanager_secret.curseforge.arn # this isnt the secret value
-        # },
+        {
+          name = "MEMORY"
+          value = var.memory_env_var
+        },
+        {
+          name = "WHITELIST"
+          value = "ConcentratedAndi,f_r_o_g_g_i_e,ElBigMacAttack,Jardo_Rook"
+        },
+        {
+          name = "MOTD"
+          value = "No cover charge, 2 drink minimum."
+        },
+        {
+          name = "CF_API_KEY"
+          value = var.cf_api_key
+        },
+        {
+          name = "CF_EXCLUDE_MODS"
+          value = "snow-under-trees-remastered,fix-experience-bug,sparse-structures,structory-towers,structory,packet-fixer,all-the-wizard-gear,towers-of-the-wild-modded"
+        },
         {
           name = "CF_PAGE_URL"
-          value = "https://www.curseforge.com/minecraft/modpacks/all-the-mods-8"
+          value = "https://www.curseforge.com/minecraft/modpacks/all-the-mods-9"
         }
       ]
       mountPoints   = [
         {
           containerPath = "/data"
-          sourceVolume  = "minecraft-data"
+          sourceVolume  = "minecraft-efs"
         }
       ]
     }
   ])
   volume {
-    name = "minecraft-data"
+    name      = "minecraft-efs"
+    efs_volume_configuration {
+      file_system_id = aws_efs_file_system.minecraft_efs.id
+      root_directory = "/data"
+      transit_encryption = "ENABLED"
+      authorization_config {
+        access_point_id = aws_efs_access_point.minecraft_efs_ap.id
+      }
+    }
   }
 }
 
@@ -63,7 +90,7 @@ resource "aws_ecs_service" "minecraft_server" {
   desired_count   = 1
   network_configuration {
     subnets          = module.vpc.public_subnets
-    security_groups  = [aws_security_group.minecraft_server.id]
+    security_groups  = [aws_security_group.minecraft_sg.id]
     assign_public_ip = true
   }
   launch_type = "FARGATE"
