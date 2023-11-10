@@ -21,7 +21,7 @@ export AWS_REGION=your_aws_region
 
 cd build
 docker build . -t jardo_minecraft:v1.0.0
-docker image ls # to confirm it was made properly, get the IMAGE ID
+docker image ls # to confirm it was made properly, get the IMAGE_ID
 aws ecr get-login-password --region "${AWS_REGION}" | docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com
 docker tag IMAGE_ID "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com/minecraft:v1.0.0
 docker push "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com/minecraft:v1.0.0
@@ -29,7 +29,7 @@ docker push "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com/minecraft:
 
 ## Terraform
 ```bash
-# env vars set NOT RECOMMMENDED
+# env vars set NOT RECOMMMENDED (:
 export AWS_ACCESS_KEY_ID=your_aws_access_key
 export AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
 
@@ -46,6 +46,7 @@ terraform apply
 - https://github.com/tfutils/tfenv
 - https://docs.aws.amazon.com/AmazonECR/latest/userguide/getting-started-cli.html
 - https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html
+- https://medium.com/@ilia.lazebnik/attaching-an-efs-file-system-to-an-ecs-task-7bd15b76a6ef
 
 
 # Client instructions

@@ -65,13 +65,17 @@ resource "aws_ecs_task_definition" "minecraft_server" {
       mountPoints   = [
         {
           containerPath = "/data"
-          sourceVolume  = "minecraft-data"
+          sourceVolume  = "minecraft-efs"
         }
       ]
     }
   ])
   volume {
-    name = "minecraft-data"
+    name      = "minecraft-efs"
+    efs_volume_configuration {
+      file_system_id = aws_efs_file_system.minecraft_efs.id
+      root_directory = "/data"
+    }
   }
 }
 
