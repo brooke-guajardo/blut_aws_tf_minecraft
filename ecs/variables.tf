@@ -10,7 +10,7 @@ variable "memory" {
 
 variable "memory_env_var" {
   description = "default amount of memory to give to ecs, but this is set within the container"
-  default = "8G"
+  default = "32G"
 }
 
 variable "port" {
