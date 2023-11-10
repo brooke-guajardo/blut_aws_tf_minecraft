@@ -42,6 +42,14 @@ resource "aws_ecs_task_definition" "minecraft_server" {
           value = var.memory_env_var
         },
         {
+          name = "WHITELIST"
+          value = "ConcentratedAndi,f_r_o_g_g_i_e,ElBigMacAttack,Jardo_Rook"
+        },
+        {
+          name = "MOTD"
+          value = "No cover charge, 2 drink minimum."
+        },
+        {
           name = "CF_EXCLUDE_MODS"
           value = "snow-under-trees-remastered,fix-experience-bug,sparse-structures,structory-towers,structory,packet-fixer,all-the-wizard-gear,towers-of-the-wild-modded"
         },
