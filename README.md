@@ -12,6 +12,8 @@ terraform apply
 ```
 
 ## Build image with non-auto download files copied over
+
+Note: Below I have `v1.0.0` this value needs to match what you put in the ecs/ecs.tf file. And if you ever rebuild the image, you need to bump the version since the ECR was set to immutable. 
 ```bash
 # env vars set NOT RECOMMMENDED (:
 export AWS_ACCESS_KEY_ID=your_aws_access_key
