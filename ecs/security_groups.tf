@@ -30,8 +30,8 @@ resource "aws_security_group" "minecraft_efs_sg" {
  # ingress from ecs only
   ingress {
     description = "rule for inbound efs access"
-    from_port   = 22
-    to_port     = 22
+    from_port   = 2049
+    to_port     = 2049
     protocol    = "tcp"
     security_groups = [aws_security_group.minecraft_sg.id]
   }
