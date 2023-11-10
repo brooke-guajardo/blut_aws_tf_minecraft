@@ -27,7 +27,7 @@ data "aws_iam_policy_document" "ecs_task_efs" {
     actions = ["elasticfilesystem:ClientWrite"]
 
   resources = [
-    data.aws_efs_file_system.minecraft_efs.arn
+    aws_efs_file_system.minecraft_efs.arn
   ]
   }
 }
@@ -39,5 +39,5 @@ resource "aws_iam_policy" "ecs_task_efs_policy" {
 
 resource "aws_iam_role_policy_attachment" "ecs_tasks_efs_role" {
   role       = aws_iam_role.ecs_tasks_execution_role.name
-  policy_arn = data.aws_iam_policy.ecs_task_efs_policy.arn
+  policy_arn = aws_iam_policy.ecs_task_efs_policy.arn
 }
