@@ -12,7 +12,7 @@ resource "aws_ecs_task_definition" "minecraft_server" {
   container_definitions = jsonencode([
     {
       name          = "minecraft-server"
-      image         = "itzg/minecraft-server:java17-alpine"
+      image         = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com/minecraft:latest"
       essential     = true
       tty           = true
       stdin_open    = true
@@ -31,19 +31,23 @@ resource "aws_ecs_task_definition" "minecraft_server" {
         },
         {
           name = "VERSION"
-          value = "1.19.2"
+          value = "1.20.1"
         },
         {
           name = "TYPE"
           value = "AUTO_CURSEFORGE"
         },
         {
-          name = "CF_API_KEY"
-          value = var.cf_api_key
+          name = "MEMORY"
+          value = var.memory_env_var
+        },
+        {
+          name = "CF_EXCLUDE_MODS"
+          value = "snow-under-trees-remastered,fix-experience-bug,sparse-structures,structory-towers,structory,packet-fixer,all-the-wizard-gear,towers-of-the-wild-modded"
         },
         {
           name = "CF_PAGE_URL"
-          value = "https://www.curseforge.com/minecraft/modpacks/all-the-mods-8"
+          value = "https://www.curseforge.com/minecraft/modpacks/all-the-mods-9"
         }
       ]
       mountPoints   = [

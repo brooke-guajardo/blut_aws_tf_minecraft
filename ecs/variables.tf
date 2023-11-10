@@ -8,6 +8,11 @@ variable "memory" {
   default = 8192
 }
 
+variable "memory_env_var" {
+  description = "default amount of memory to give to ecs, but this is set within the container"
+  default = "8GB"
+}
+
 variable "port" {
   description = "default container port"
   default = 25565
@@ -17,3 +22,5 @@ variable "region" {
   description = "default aws region"
   default = "us-east-1"
 }
+
+data "aws_caller_identity" "current" {}

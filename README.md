@@ -1,13 +1,30 @@
 # blut_aws_tf_minecraft fargate instructions
 
-## Build image with non-auto download files copied over
+## Create ECR
 ```bash
+# env vars set NOT RECOMMMENDED (:
+export AWS_ACCESS_KEY_ID=your_aws_access_key
+export AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
 
-cd build
-docker build . -t jardo_minecraft
+cd ecr
+terraform init
+terraform apply
 ```
 
+## Build image with non-auto download files copied over
+```bash
+# env vars set NOT RECOMMMENDED (:
+export AWS_ACCESS_KEY_ID=your_aws_access_key
+export AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
+export AWS_ACCOUNT_ID=your_aws_account_id
+export AWS_REGION=your_aws_region
 
+cd build
+docker build . -t jardo_minecraft:v1.0.0
+docker image ls # to confirm it was made properly
+docker tag jardo_minecraft:v1.0.0 "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com/minecraft
+docker push "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com/minecraft
+```
 
 ## Terraform
 ```bash
@@ -26,6 +43,7 @@ terraform apply
 - https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html 
 - https://banhawy.medium.com/3-ways-to-configure-terraform-to-use-your-aws-account-fb00a08ded5
 - https://github.com/tfutils/tfenv
+- https://docs.aws.amazon.com/AmazonECR/latest/userguide/getting-started-cli.html
 
 
 # Client instructions
