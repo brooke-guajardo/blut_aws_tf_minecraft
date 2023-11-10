@@ -24,7 +24,7 @@ resource "aws_iam_role_policy_attachment" "ecs_tasks_execution_role" {
 # EFS Stuff TODO get that * outta here
 data "aws_iam_policy_document" "ecs_task_efs" {
   statement {
-    actions = ["elasticfilesystem:*"]
+    actions = ["elasticfilesystem:ClientRootAccess"]
 
   resources = [
     aws_efs_file_system.minecraft_efs.arn
