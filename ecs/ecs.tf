@@ -63,7 +63,7 @@ resource "aws_ecs_task_definition" "minecraft_server" {
         },
         {
           name = "CF_PAGE_URL"
-          value = "https://www.curseforge.com/minecraft/modpacks/all-the-mods-9"
+          value = "https://www.curseforge.com/minecraft/modpacks/all-the-mods-9/files/4856145"
         }
       ]
       mountPoints   = [
