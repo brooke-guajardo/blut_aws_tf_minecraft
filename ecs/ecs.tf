@@ -67,7 +67,7 @@ resource "aws_ecs_task_definition" "minecraft_server" {
         },
         {
           name = "CF_EXCLUDE_MODS"
-          value = "snow-under-trees-remastered,fix-experience-bug,sparse-structures,structory-towers,structory,packet-fixer,all-the-wizard-gear,towers-of-the-wild-modded"
+          value = "structory,all-the-wizard-gear,towers-of-the-wild-modded"
         },
         {
           name = "CF_PAGE_URL"

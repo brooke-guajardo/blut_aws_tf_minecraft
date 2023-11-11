@@ -7,4 +7,4 @@ COPY *.jar /data/mods/*
 # Copy old save file to use pregen world
 VOLUME ["/worlds"]
 WORKDIR /worlds
-COPY ./DevOps_Yearn_for_the_Mines /worlds/*
+COPY DevOps_Yearn_for_the_Mines /worlds/DevOps_Yearn_for_the_Mines
