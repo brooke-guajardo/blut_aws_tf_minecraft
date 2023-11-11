@@ -12,7 +12,7 @@ resource "aws_ecs_task_definition" "minecraft_server" {
   container_definitions = jsonencode([
     {
       name          = "minecraft-server"
-      image         = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com/minecraft:v1.2.0"
+      image         = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com/minecraft:v7.0.0"
       essential     = true
       tty           = true
       stdin_open    = true
@@ -50,12 +50,16 @@ resource "aws_ecs_task_definition" "minecraft_server" {
           value = "No cover charge, 2 drink minimum."
         },
         {
+          name = "SNOOPER_ENABLED"
+          value = "FALSE"
+        },
+        {
           name = "CF_API_KEY"
           value = var.cf_api_key
         },
         {
           name = "CF_EXCLUDE_MODS"
-          value = "snow-under-trees-remastered,fix-experience-bug,sparse-structures,structory-towers,structory,packet-fixer,all-the-wizard-gear,towers-of-the-wild-modded"
+          value = "structory,all-the-wizard-gear,towers-of-the-wild-modded"
         },
         {
           name = "CF_PAGE_URL"
@@ -66,6 +70,10 @@ resource "aws_ecs_task_definition" "minecraft_server" {
         {
           containerPath = "/data"
           sourceVolume  = "minecraft-efs"
+        },
+        {
+          containerPath = "/worlds"
+          sourceVolume  = "minecraft-img-vol"
         }
       ]
     }
@@ -81,6 +89,10 @@ resource "aws_ecs_task_definition" "minecraft_server" {
       }
     }
   }
+  volume {
+    name = "minecraft-img-vol"
+  }
+  depends_on = [ aws_efs_access_point.minecraft_efs_ap ]
 }
 
 resource "aws_ecs_service" "minecraft_server" {
