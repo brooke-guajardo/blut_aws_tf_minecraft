@@ -54,14 +54,6 @@ resource "aws_ecs_task_definition" "minecraft_server" {
           value = "FALSE"
         },
         {
-          name = "WORLD"
-          value = "/worlds/DevOps_Yearn_for_the_Mines"
-        },
-        {
-          name = "FORCE_WORLD_COPY"
-          value = "TRUE"
-        },
-        {
           name = "CF_API_KEY"
           value = var.cf_api_key
         },
