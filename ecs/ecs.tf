@@ -78,6 +78,10 @@ resource "aws_ecs_task_definition" "minecraft_server" {
         {
           containerPath = "/data"
           sourceVolume  = "minecraft-efs"
+        },
+        {
+          containerPath = "/worlds"
+          sourceVolume  = "minecraft-img-vol"
         }
       ]
     }
@@ -92,6 +96,9 @@ resource "aws_ecs_task_definition" "minecraft_server" {
         access_point_id = aws_efs_access_point.minecraft_efs_ap.id
       }
     }
+  }
+  volume {
+    name = "minecraft-img-vol"
   }
   depends_on = [ aws_efs_access_point.minecraft_efs_ap ]
 }
