@@ -43,7 +43,14 @@ terraform apply
 # Client instructions
 - Install CurseForge: https://www.curseforge.com/download/app
 - Install ATM9 version `All the Mods 9-0.2.15` link [here](https://www.curseforge.com/minecraft/modpacks/all-the-mods-9/files?page=1&pageSize=20) with CurseForge.
-- This should make a new entry under the 'My Modpacks' tab in your CurseForge app, click play on the top left :p
+- This should make a new entry under the 'My Modpacks' tab in your CurseForge app
+- Export this profile checking everything except saves and expand the mod folder section and unselect `allthewizardgear`
+- This should make a zip file
+- On the top left of curseforge, select 'Create Custom Profile'
+- Select the 'import a previously creaed profile' option on the pop up
+- Use the zip file you just made
+- This should make another entry under the 'My Modpacks' tab in your CurseForge app, I suggest you edit and rename it. And delete the first ATM9 profile
+- Select play on this new modpack profile
 - This should bring up your MC launcher, use java edition
 - The screen may look red and scary, don't be afraid Andi
 - Once launcher has loaded click MULTIPLAYER
