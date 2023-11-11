@@ -29,12 +29,13 @@ docker tag IMAGE_ID "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com/mi
 docker push "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com/minecraft:v1.0.0
 ```
 
-## Terraform
+## Deploy ECS, EFS, VPC and Security Groups
 ```bash
 # env vars set NOT RECOMMMENDED (:
 export AWS_ACCESS_KEY_ID=your_aws_access_key
 export AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
 
+cd ecs
 terraform init
 terraform apply
 ```
@@ -65,3 +66,10 @@ terraform apply
 - https://github.com/pgreene/terraform-aws-efs-access-point/blob/main/efs-access-point.tf
 - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition#example-using-efs_volume_configuration
 - https://github.com/Yris-ops/minecraft-server-aws-ecs-fargate/blob/main/main.tf
+
+## Pre-generated worlds
+1. Reference branch `init_pregen` you will need a folder in the build directory and some changes to the docker file. 
+2. Then 2 env vars that you only want to run once against your ECS or else you'll lose progress that's been written to your EFS.
+3. Once you have those changes
+4. Build new image and upload to ECR
+5. Deploy to ECS the new env var and with the new docker image tag
