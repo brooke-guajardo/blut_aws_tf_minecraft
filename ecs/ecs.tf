@@ -43,7 +43,7 @@ resource "aws_ecs_task_definition" "minecraft_server" {
         },
         {
           name = "WHITELIST"
-          value = "ConcentratedAndi,f_r_o_g_g_i_e,ElBigMacAttack,Jardo_Rook"
+          value = "ConcentratedAndi,f_r_o_g_g_i_e,ElBigMacAttack,Jardo_Rook,NotL33tSauce"
         },
         {
           name = "MOTD"
@@ -60,6 +60,10 @@ resource "aws_ecs_task_definition" "minecraft_server" {
         {
           name = "CF_EXCLUDE_MODS"
           value = "structory,all-the-wizard-gear,towers-of-the-wild-modded"
+        },
+        {
+          name = "ALLOW_FLIGHT"
+          value = "TRUE"
         },
         {
           name = "CF_PAGE_URL"
