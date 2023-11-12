@@ -12,7 +12,7 @@ resource "aws_ecs_task_definition" "minecraft_server" {
   container_definitions = jsonencode([
     {
       name          = "minecraft-server"
-      image         = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com/minecraft:v7.0.0"
+      image         = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com/minecraft:v8.0.0"
       essential     = true
       tty           = true
       stdin_open    = true
@@ -60,6 +60,10 @@ resource "aws_ecs_task_definition" "minecraft_server" {
         {
           name = "CF_EXCLUDE_MODS"
           value = "structory,all-the-wizard-gear,towers-of-the-wild-modded"
+        },
+        {
+          name = "ALLOW_FLIGHT"
+          value = "TRUE"
         },
         {
           name = "CF_PAGE_URL"
