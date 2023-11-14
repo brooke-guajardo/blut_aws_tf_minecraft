@@ -8,6 +8,7 @@ from nacl.exceptions import BadSignatureError
 
 def lambda_handler(event, context):
     # Insert some logic on checking message size and sanity
+    print(event)
     botPubKey = os.environ['PUBLIC_KEY']
     verify_key = VerifyKey(bytes.fromhex(botPubKey))
 
