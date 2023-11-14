@@ -1,6 +1,8 @@
 import boto3
 import os
 import nacl
+import flask
+from flask import jsonify
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
 
@@ -23,10 +25,9 @@ def lambda_handler(event, context):
 
     # Respond to Discord config ping
     if event['type'] == 1:
-        return {
-        "statusCode": 200,
-        "body": { "type": 1 }
-        }
+        return jsonify({
+            "type": 1
+        })
 
 
     # Respond to /ping test
