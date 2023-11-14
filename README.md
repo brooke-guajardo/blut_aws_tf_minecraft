@@ -73,6 +73,7 @@ terraform apply
 - https://github.com/pgreene/terraform-aws-efs-access-point/blob/main/efs-access-point.tf
 - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition#example-using-efs_volume_configuration
 - https://github.com/Yris-ops/minecraft-server-aws-ecs-fargate/blob/main/main.tf
+- https://developer.hashicorp.com/terraform/tutorials/aws/lambda-api-gateway#clone-example-configuration
 
 ## Pre-generated worlds
 1. Reference branch `init_pregen` you will need a folder in the build directory and some changes to the docker file. 
