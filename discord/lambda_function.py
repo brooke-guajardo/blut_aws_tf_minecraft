@@ -1,10 +1,10 @@
 import boto3
 import os
-import pynacl
+import nacl
 import flask
 from flask import jsonify
-from pynacl.signing import VerifyKey
-from pynacl.exceptions import BadSignatureError
+from nacl.signing import VerifyKey
+from nacl.exceptions import BadSignatureError
 
 def lambda_handler(event, context):
     # Insert some logic on checking message size and sanity
