@@ -10,6 +10,11 @@ resource "aws_lambda_function" "blut_aws_tf_minecraft_lambda" {
   source_code_hash = filebase64sha256("${path.module}/deployment_package.zip")
 
   role = aws_iam_role.lambda_exec.arn
+  environment {
+    variables = {
+      PUBLIC_KEY = var.public_key
+    }
+  }
 }
 
 resource "aws_iam_role" "lambda_exec" {
