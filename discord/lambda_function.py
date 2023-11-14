@@ -12,8 +12,8 @@ def lambda_handler(event, context):
     botPubKey = os.environ['PUBLIC_KEY']
     verify_key = VerifyKey(bytes.fromhex(botPubKey))
 
-    signature = event["X-Signature-Ed25519"]
-    timestamp = event["X-Signature-Timestamp"]
+    signature = event['headers']['x-signature-ed25519']
+    timestamp = event['headers']['x-signature-timestamp']
     body = event.data.decode("utf-8")
 
     try:
