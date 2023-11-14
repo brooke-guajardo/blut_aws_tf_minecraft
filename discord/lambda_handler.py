@@ -21,6 +21,13 @@ def lambda_handler(event, context):
                 "body": 'invalid request signature',
             }
 
+    # Respond to Discord config ping
+    if event['type'] == 1:
+        return {
+        "statusCode": 200,
+        "body": { "type": 1 }
+        }
+
 
     # Respond to /ping test
     if event['body'] == 'ping':
@@ -58,3 +65,8 @@ def lambda_handler(event, context):
                     "type": 4,  
                     "data": { "content": eni }
                 }
+    
+    # 404 if gets to here, handlers failed or command was not valid
+    return {
+        "statusCode": 404
+    }
