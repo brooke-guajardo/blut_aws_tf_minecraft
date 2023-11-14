@@ -21,7 +21,7 @@ resource "aws_apigatewayv2_integration" "blut_aws_tf_minecraft_lambda" {
 resource "aws_apigatewayv2_route" "blut_aws_tf_minecraft_lambda" {
   api_id = aws_apigatewayv2_api.lambda.id
 
-  route_key = "GET /hello"
+  route_key = "POST /discord"
   target    = "integrations/${aws_apigatewayv2_integration.blut_aws_tf_minecraft_lambda.id}"
 }
 
