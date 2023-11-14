@@ -4,7 +4,7 @@ resource "aws_lambda_function" "blut_aws_tf_minecraft_lambda" {
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key    = aws_s3_object.lambda_load_python_artifact.key
 
-  runtime = "python3.11"
+  runtime = "python3.10"
   handler = "lambda_handler.py"
 
   source_code_hash = data.archive_file.lambda_load_python_artifact.output_base64sha256
