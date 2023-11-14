@@ -46,6 +46,10 @@ resource "aws_ecs_task_definition" "minecraft_server" {
           value = "ConcentratedAndi,f_r_o_g_g_i_e,ElBigMacAttack,Jardo_Rook,NotL33tSauce"
         },
         {
+          name = "EXISTING_WHITELIST_FILE"
+          value = "SYNCHRONIZE"
+        },
+        {
           name = "MOTD"
           value = "No cover charge, 2 drink minimum."
         },
@@ -74,10 +78,6 @@ resource "aws_ecs_task_definition" "minecraft_server" {
         {
           containerPath = "/data"
           sourceVolume  = "minecraft-efs"
-        },
-        {
-          containerPath = "/worlds"
-          sourceVolume  = "minecraft-img-vol"
         }
       ]
     }
@@ -93,10 +93,6 @@ resource "aws_ecs_task_definition" "minecraft_server" {
       }
     }
   }
-  volume {
-    name = "minecraft-img-vol"
-  }
-  depends_on = [ aws_efs_access_point.minecraft_efs_ap ]
 }
 
 resource "aws_ecs_service" "minecraft_server" {
