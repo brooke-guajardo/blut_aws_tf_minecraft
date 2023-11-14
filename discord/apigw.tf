@@ -10,7 +10,7 @@ resource "aws_apigatewayv2_stage" "lambda" {
   auto_deploy = true
 }
 
-resource "aws_apigatewayv2_integration" "hello_world" {
+resource "aws_apigatewayv2_integration" "blut_aws_tf_minecraft_lambda" {
   api_id = aws_apigatewayv2_api.lambda.id
 
   integration_uri    = aws_lambda_function.blut_aws_tf_minecraft_lambda.invoke_arn
@@ -18,11 +18,11 @@ resource "aws_apigatewayv2_integration" "hello_world" {
   integration_method = "POST"
 }
 
-resource "aws_apigatewayv2_route" "hello_world" {
+resource "aws_apigatewayv2_route" "blut_aws_tf_minecraft_lambda" {
   api_id = aws_apigatewayv2_api.lambda.id
 
   route_key = "GET /hello"
-  target    = "integrations/${aws_apigatewayv2_integration.hello_world.id}"
+  target    = "integrations/${aws_apigatewayv2_integration.blut_aws_tf_minecraft_lambda.id}"
 }
 
 
