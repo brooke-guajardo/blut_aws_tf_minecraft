@@ -14,7 +14,8 @@ def lambda_handler(event, context):
 
     signature = event['headers']['x-signature-ed25519']
     timestamp = event['headers']['x-signature-timestamp']
-    body = event['body'].decode("utf-8")
+    body = event['body']
+    print(body)
 
     try:
         verify_key.verify(f'{timestamp}{body}'.encode(), bytes.fromhex(signature))
