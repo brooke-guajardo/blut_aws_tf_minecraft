@@ -19,7 +19,7 @@ resource "aws_s3_bucket_acl" "lambda_bucket" {
 data "archive_file" "lambda_load_python_artifact" {
   type = "zip"
 
-  source_dir  = "${path.module}/deployment_package.zip"
+  source_file  = "${path.module}/deployment_package.zip"
   output_path = "${path.module}/deployment_package.zip"
 }
 
