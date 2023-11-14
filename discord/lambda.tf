@@ -5,7 +5,6 @@ resource "aws_lambda_function" "blut_aws_tf_minecraft_lambda" {
   s3_key    = aws_s3_object.lambda_load_python_artifact.key
 
   runtime = "python3.10"
-  handler = "lambda_fucntion.lambda_handler"
 
   source_code_hash = filebase64sha256("${path.module}/deployment_package.zip")
 
