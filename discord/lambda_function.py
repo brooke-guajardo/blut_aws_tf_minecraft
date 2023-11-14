@@ -2,6 +2,7 @@ import boto3
 import os
 import nacl
 import flask
+import json
 from flask import jsonify
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
@@ -14,8 +15,7 @@ def lambda_handler(event, context):
 
     signature = event['headers']['x-signature-ed25519']
     timestamp = event['headers']['x-signature-timestamp']
-    body = event['body']
-    print(body)
+    body = json.loads(event['body'])
 
     try:
         verify_key.verify(f'{timestamp}{body}'.encode(), bytes.fromhex(signature))
@@ -26,7 +26,7 @@ def lambda_handler(event, context):
             }
 
     # Respond to Discord config ping
-    if event['type'] == 1:
+    if body['type'] == 1:
         return jsonify({
             "statusCode": 200,
             "type": 1
