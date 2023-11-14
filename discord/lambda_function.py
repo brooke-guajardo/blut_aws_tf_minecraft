@@ -26,6 +26,7 @@ def lambda_handler(event, context):
     # Respond to Discord config ping
     if event['type'] == 1:
         return jsonify({
+            "statusCode": 200,
             "type": 1
         })
 
