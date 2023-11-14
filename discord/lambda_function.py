@@ -18,7 +18,7 @@ def lambda_handler(event, context):
     body = json.loads(event['body'])
 
     try:
-        verify_key.verify(f'{timestamp}{body}'.encode(), bytes.fromhex(signature))
+        verify_key.verify(f'{timestamp}{body}', bytes.fromhex(signature))
     except BadSignatureError:
         print(f"NO GOOD")
         return {
