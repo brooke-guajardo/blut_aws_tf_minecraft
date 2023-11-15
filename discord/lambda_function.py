@@ -17,7 +17,7 @@ def lambda_handler(event, context):
     timestamp = event['headers']['x-signature-timestamp']
     print(signature)
     print(timestamp)
-    body = json.loads(event['body'])
+    body = json.dumps(event['body'])
 
     print(f'{timestamp}{body}')
     print(f'{timestamp}{body}'.encode())
