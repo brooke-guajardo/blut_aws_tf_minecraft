@@ -39,7 +39,10 @@ def lambda_handler(event, context):
         response_body = {
             "type": 4,
             "data": {
-                "content": "pong"
+                "tts": False,
+                "content": "PONG GOD DAMN IT",
+                "embeds": [],
+                "allowed_mentions": []
             }
         }
         return {
