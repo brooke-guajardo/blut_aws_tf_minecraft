@@ -22,14 +22,15 @@ commands_to_register = [
         "name": "getIP",
         "type": 1,
         "description": "returns jardo's mc server IP address ... hopefully"
-    },
-    # Add more commands here in the same format
+    }
 ]
 
-response = requests.post(url, json=commands_to_register, headers=headers)
+for command in commands_to_register:
+    command_url = url
+    response = requests.post(command_url, json=command, headers=headers)
 
-if response.status_code == 201:
-    print("Commands registered successfully!")
-else:
-    print(f"Failed to register commands. Status code: {response.status_code}")
-    print(response.text)
+    if response.status_code == 201:
+        print(f"Command '{command['name']}' registered successfully!")
+    else:
+        print(f"Failed to register command '{command['name']}'. Status code: {response.status_code}")
+        print(response.text)  # To see the error message from Discord, if any
