@@ -1,24 +1,17 @@
 import boto3
 import os
 import nacl
-import flask
 import json
-from flask import jsonify
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
 
 def lambda_handler(event, context):
-    # Insert some logic on checking message size and sanity
-    print(event)
     botPubKey = os.environ['PUBLIC_KEY']
     verify_key = VerifyKey(bytes.fromhex(botPubKey))
 
     signature = event['headers']['x-signature-ed25519']
     timestamp = event['headers']['x-signature-timestamp']
     body = event['body']
-
-    print(f'{timestamp}{body}')
-    print(f'{timestamp}{body}'.encode())
 
     try:
         body_json = json.loads(body)
@@ -32,9 +25,12 @@ def lambda_handler(event, context):
     # Respond to Discord config ping
     if body_json['type'] == 1:
         print(f"GOOD")
-        return jsonify({
-            "type": 1
-        })
+        return {
+            "statusCode": 200,
+            "body": json.dumps({
+                "type": 1
+            })
+        }
 
 
     # # Respond to /ping test
