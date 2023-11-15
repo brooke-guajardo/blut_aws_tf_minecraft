@@ -42,6 +42,13 @@ def lambda_handler(event, context):
             "embeds": [],
             "allowed_mentions": []
         }
+        print({
+            "statusCode": 200,
+            "body": json.dumps({
+                "type": 4,
+                "data": response_body
+            })
+        })
         return {
             "statusCode": 200,
             "body": json.dumps({
