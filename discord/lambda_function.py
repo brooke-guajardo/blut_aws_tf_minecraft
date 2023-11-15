@@ -33,42 +33,49 @@ def lambda_handler(event, context):
         }
 
 
-    # # Respond to /ping test
-    # if event['body'] == 'ping':
-    #     # may need python json dumps here
-    #     return { 
-    #         "type": 4,  
-    #         "data": { "content": "pong" }
-    #     }
+    # Respond to /ping test
+    if body_json['body'] == 'ping':
+        # may need python json dumps here
+        return { 
+            "statusCode": 200,
+            "body": json.dumps({
+                "type": 4,
+                "data": { "content": "pong" }
+            })
+        }
 
-    # # Respond to /getIP
-    # if event['body'] == 'getIP':
-    #     client = boto3.client('ecs',region_name='us-east-1')
+    # Respond to /getIP
+    if body_json['body'] == 'getIP':
+        client = boto3.client('ecs',region_name='us-east-1')
 
-    #     task_response = client.list_tasks(
-    #         cluster='minecraft_server',
-    #         serviceName='minecraft_server',
-    #         desiredStatus='RUNNING',
-    #         launchType='FARGATE'
-    #     )
+        task_response = client.list_tasks(
+            cluster='minecraft_server',
+            serviceName='minecraft_server',
+            desiredStatus='RUNNING',
+            launchType='FARGATE'
+        )
 
-    #     task = task_response['taskArns'][0]
+        task = task_response['taskArns'][0]
 
-    #     detail_response = client.describe_tasks(
-    #         cluster='minecraft_server',
-    #         tasks=[
-    #             task,
-    #         ]
-    #     )
+        detail_response = client.describe_tasks(
+            cluster='minecraft_server',
+            tasks=[
+                task,
+            ]
+        )
 
-    #     for detail in detail_response['tasks'][0]['attachments'][0]['details']:
-    #         if detail['name'] == 'networkInterfaceId':
-    #             eni_resource = boto3.resource("ec2",region_name='us-east-1').NetworkInterface(detail['value'])
-    #             eni = eni_resource.association_attribute.get("PublicIp")
-    #             return { 
-    #                 "type": 4,  
-    #                 "data": { "content": eni }
-    #             }
+        for detail in detail_response['tasks'][0]['attachments'][0]['details']:
+            if detail['name'] == 'networkInterfaceId':
+                eni_resource = boto3.resource("ec2",region_name='us-east-1').NetworkInterface(detail['value'])
+                eni = eni_resource.association_attribute.get("PublicIp")
+                return { 
+                    "statusCode": 200,
+                    "body": json.dumps({
+                        "type": 4,
+                        "data": { "content": eni }
+                    })
+                }
+
     
     # 404 if gets to here, handlers failed or command was not valid
     print(f"never caught")
