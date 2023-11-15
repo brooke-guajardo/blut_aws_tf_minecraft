@@ -42,10 +42,12 @@ def lambda_handler(event, context):
                 "embeds": [],
                 "allowed_mentions": []
             }
-        return json.dumps({
-            "type": 4,
-            "data": response_body
-        })
+        return {
+            "body": json.dumps({
+                "type": 4,
+                "data": response_body
+            })
+        }
 
 
     # Respond to /get_ip
