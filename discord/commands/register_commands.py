@@ -19,7 +19,7 @@ commands_to_register = [
         "description": "replies with pong, simple slash health check"
     },
     {
-        "name": "getIP",
+        "name": "get_ip",
         "type": 1,
         "description": "returns jardo's mc server IP address ... hopefully"
     }

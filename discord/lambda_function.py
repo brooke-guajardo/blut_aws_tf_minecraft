@@ -6,6 +6,7 @@ from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
 
 def lambda_handler(event, context):
+    print(event)
     botPubKey = os.environ['PUBLIC_KEY']
     verify_key = VerifyKey(bytes.fromhex(botPubKey))
 
@@ -44,8 +45,8 @@ def lambda_handler(event, context):
             })
         }
 
-    # Respond to /getIP
-    if body_json['body'] == 'getIP':
+    # Respond to /get_ip
+    if body_json['body'] == 'get_ip':
         client = boto3.client('ecs',region_name='us-east-1')
 
         task_response = client.list_tasks(
