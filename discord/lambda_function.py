@@ -15,24 +15,22 @@ def lambda_handler(event, context):
 
     signature = event['headers']['x-signature-ed25519']
     timestamp = event['headers']['x-signature-timestamp']
-    print(signature)
-    print(timestamp)
-    body = json.dumps(event['body'])
+    body = event['body']
 
     print(f'{timestamp}{body}')
     print(f'{timestamp}{body}'.encode())
 
     try:
+        body_json = json.loads(body)
         verify_key.verify(f'{timestamp}{body}'.encode(), bytes.fromhex(signature))
-    except BadSignatureError:
-        print(f"NO GOOD")
+    except (ValueError, KeyError, BadSignatureError) as e:
         return {
-                "statusCode": 401,
-                "body": 'invalid request signature',
-            }
+            "statusCode": 401,
+            "body": 'Invalid request signature',
+        }
 
     # Respond to Discord config ping
-    if body['type'] == 1:
+    if body_json['type'] == 1:
         print(f"GOOD")
         return jsonify({
             "type": 1
