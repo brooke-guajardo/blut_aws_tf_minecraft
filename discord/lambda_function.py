@@ -36,7 +36,7 @@ def lambda_handler(event, context):
 
     # Respond to /ping test
     if body_json['data']['name'] == 'ping':
-        response_body = {
+        return {
             "type": 4,
             "data": {
                 "tts": False,
@@ -46,10 +46,6 @@ def lambda_handler(event, context):
             }
         }
 
-        return {
-            "statusCode": 200,
-            "body": json.dumps(response_body)
-        }
 
     # Respond to /get_ip
     if body_json['data']['name'] == 'get_ip':
