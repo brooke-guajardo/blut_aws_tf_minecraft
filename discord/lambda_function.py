@@ -15,13 +15,15 @@ def lambda_handler(event, context):
 
     signature = event['headers']['x-signature-ed25519']
     timestamp = event['headers']['x-signature-timestamp']
+    print(signature)
+    print(timestamp)
     body = json.loads(event['body'])
 
     print(f'{timestamp}{body}')
-    print(bytes.fromhex(signature))
+    print(f'{timestamp}{body}'.encode())
 
     try:
-        verify_key.verify(f'{timestamp}{body}', bytes.fromhex(signature))
+        verify_key.verify(f'{timestamp}{body}'.encode(), bytes.fromhex(signature))
     except BadSignatureError:
         print(f"NO GOOD")
         return {
@@ -33,7 +35,6 @@ def lambda_handler(event, context):
     if body['type'] == 1:
         print(f"GOOD")
         return jsonify({
-            "statusCode": 200,
             "type": 1
         })
 
