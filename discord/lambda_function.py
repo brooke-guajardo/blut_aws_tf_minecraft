@@ -36,14 +36,15 @@ def lambda_handler(event, context):
 
     # Respond to /ping test
     if body_json['data']['name'] == 'ping':
-        return json.dumps({
-            "type": 4,
-            "data": {
+        response_body = json.dumps({
                 "tts": False,
                 "content": "PONG PONG PONG PONG",
                 "embeds": [],
-                "allowed_mentions": { "parse": [] }
-            }
+                "allowed_mentions": []
+            })
+        return json.dumps({
+            "type": 4,
+            "data": response_body
         })
 
 
