@@ -37,12 +37,13 @@ def lambda_handler(event, context):
     # Respond to /ping test
     if body_json['data']['name'] == 'ping':
         response_body = {
-                "tts": False,
-                "content": "PONG PONG PONG PONG",
-                "embeds": [],
-                "allowed_mentions": []
-            }
+            "tts": False,
+            "content": "PONG PONG PONG PONG",
+            "embeds": [],
+            "allowed_mentions": []
+        }
         return {
+            "statusCode": 200,
             "body": json.dumps({
                 "type": 4,
                 "data": response_body
