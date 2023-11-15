@@ -40,11 +40,12 @@ def lambda_handler(event, context):
             "type": 4,
             "data": {
                 "tts": False,
-                "content": "PONG GOD DAMN IT",
+                "content": "PONG PONG PONG PONG",
                 "embeds": [],
-                "allowed_mentions": []
+                "allowed_mentions": { "parse": [] }
             }
         }
+
         return {
             "statusCode": 200,
             "body": json.dumps(response_body)
