@@ -38,7 +38,6 @@ def lambda_handler(event, context):
     if body_json['data']['name'] == 'ping':
         # may need python json dumps here
         return { 
-            "statusCode": 200,
             "body": json.dumps({
                 "type": 4,
                 "data": { "content": "pong" }
@@ -70,7 +69,6 @@ def lambda_handler(event, context):
                 eni_resource = boto3.resource("ec2",region_name='us-east-1').NetworkInterface(detail['value'])
                 eni = eni_resource.association_attribute.get("PublicIp")
                 return { 
-                    "statusCode": 200,
                     "body": json.dumps({
                         "type": 4,
                         "data": { "content": eni }
