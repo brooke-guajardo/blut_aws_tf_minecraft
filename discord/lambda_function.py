@@ -35,7 +35,7 @@ def lambda_handler(event, context):
 
 
     # Respond to /ping test
-    if body_json['body'] == 'ping':
+    if body_json['data']['name'] == 'ping':
         # may need python json dumps here
         return { 
             "statusCode": 200,
@@ -46,7 +46,7 @@ def lambda_handler(event, context):
         }
 
     # Respond to /get_ip
-    if body_json['body'] == 'get_ip':
+    if body_json['data']['name'] == 'get_ip':
         client = boto3.client('ecs',region_name='us-east-1')
 
         task_response = client.list_tasks(
