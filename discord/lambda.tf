@@ -51,16 +51,7 @@ data "aws_ecs_service" "mc_service" {
 }
 
 data "aws_ecs_task_definition" "mc_td" {
-  task_definition = aws_ecs_task_definition.minecraft-server-task-def.family
-}
-
-data "aws_ecs_task" "mc_task" {
-  task_definition = data.aws_ecs_task_definition.mc_td.arn
-}
-
-data "aws_ec2_network_interface" "eni" {
-  count = length(data.aws_ecs_task.mc_task.network_interfaces)
-  id    = data.aws_ecs_task.mc_task.network_interfaces[count.index].id
+  task_definition = data.aws_ecs_task_definition.minecraft-server-task-def.family
 }
 
 
@@ -83,8 +74,7 @@ data "aws_iam_policy_document" "lambda_get_ip" {
       "ec2:DescribeNetworkInterfaces"
     ]
     resources = [
-      for eni in data.aws_ec2_network_interface.eni :
-      "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:network-interface/${eni.id}"
+      "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:network-interface/*"
     ]
   }
 }
