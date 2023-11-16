@@ -40,22 +40,6 @@ resource "aws_iam_role_policy_attachment" "lambda_policy" {
 }
 
 # Get IP IAMs
-# first data sources
-data "aws_ecs_cluster" "mc_cluster" {
-  cluster_name = "minecraft_server"
-}
-
-data "aws_ecs_service" "mc_service" {
-  service_name    = "minecraft_server"
-  cluster_arn     = data.aws_ecs_cluster.mc_cluster.arn
-}
-
-data "aws_ecs_task_definition" "mc_td" {
-  task_definition = "minecraft-server-task-def"
-}
-
-
-# IAMS
 data "aws_iam_policy_document" "lambda_get_ip" {
   statement {
     actions = [
@@ -63,9 +47,7 @@ data "aws_iam_policy_document" "lambda_get_ip" {
       "ecs:DescribeTasks"
     ]
     resources = [
-      data.aws_ecs_cluster.mc_cluster.arn,
-      data.aws_ecs_service.mc_service.arn,
-      data.aws_ecs_task_definition.mc_td.arn
+      "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:task-definition/minecraft-server-task-def/*"
     ]
   }
 
