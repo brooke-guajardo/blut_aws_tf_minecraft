@@ -61,7 +61,6 @@ def lambda_handler(event, context):
             launchType='FARGATE'
         )
 
-        print(f"Task Repsonse: {task_response}")
         task = task_response['taskArns'][0]
 
         detail_response = client.describe_tasks(
@@ -71,12 +70,10 @@ def lambda_handler(event, context):
             ]
         )
 
-        print(f"Detail Response {detail_response}")
         for detail in detail_response['tasks'][0]['attachments'][0]['details']:
             if detail['name'] == 'networkInterfaceId':
                 eni_resource = boto3.resource("ec2",region_name='us-east-1').NetworkInterface(detail['value'])
                 eni = eni_resource.association_attribute.get("PublicIp")
-                print("get ip")
                 response_payload = {
                     "type": 4,
                     "data": {
