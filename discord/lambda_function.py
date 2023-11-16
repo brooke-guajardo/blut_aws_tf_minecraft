@@ -41,18 +41,12 @@ def lambda_handler(event, context):
             "type": 4,
             "data": {
                 "tts": False,
-                "content": "Congrats on sending your command!",
+                "content": "pong",
                 "embeds": [],
                 "allowed_mentions": {"parse": []}
             }
         }
-        return {
-            "statusCode": 200,
-            "body": json.dumps(response_payload),
-            "headers": {
-                "Content-Type": "application/json"
-            }
-        }
+        return generate_response(response_payload)
 
 
     # Respond to /get_ip
@@ -79,13 +73,17 @@ def lambda_handler(event, context):
             if detail['name'] == 'networkInterfaceId':
                 eni_resource = boto3.resource("ec2",region_name='us-east-1').NetworkInterface(detail['value'])
                 eni = eni_resource.association_attribute.get("PublicIp")
-                print("returned")
-                return { 
-                    "body": json.dumps({
-                        "type": 4,
-                        "data": { "content": eni }
-                    })
+                print("get ip")
+                response_payload = {
+                    "type": 4,
+                    "data": {
+                        "tts": False,
+                        "content": f"Server IP is: {eni}",
+                        "embeds": [],
+                        "allowed_mentions": {"parse": []}
+                    }
                 }
+                return generate_response(response_payload)
 
     
     # 404 if gets to here, handlers failed or command was not valid
@@ -93,3 +91,16 @@ def lambda_handler(event, context):
     return {
         "statusCode": 404
     }
+
+def generate_response(data, status_code=200):
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    response = {
+        "statusCode": status_code,
+        "headers": headers,
+        "body": json.dumps(data)
+    }
+
+    return response
