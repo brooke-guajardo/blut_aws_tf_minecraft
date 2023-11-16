@@ -47,7 +47,7 @@ data "aws_ecs_cluster" "mc_cluster" {
 
 data "aws_ecs_service" "mc_service" {
   service_name    = "minecraft_server"
-  cluster_arn     = data.aws_ecs_cluster.example.arn
+  cluster_arn     = data.aws_ecs_cluster.mc_cluster.arn
 }
 
 data "aws_ecs_task_definition" "mc_td" {
