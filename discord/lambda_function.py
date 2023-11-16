@@ -36,23 +36,23 @@ def lambda_handler(event, context):
 
     # Respond to /ping test
     if body_json['data']['name'] == 'ping':
-        print("attmepting to pong ):")
-        return json.dumps({
+        print("attempting to pong ):")
+        response_payload = {
+            "type": 4,
+            "data": {
+                "tts": False,
+                "content": "Congrats on sending your command!",
+                "embeds": [],
+                "allowed_mentions": {"parse": []}
+            }
+        }
+        return {
+            "statusCode": 200,
+            "body": json.dumps(response_payload),
             "headers": {
                 "Content-Type": "application/json"
-            },
-            "response": {
-                "data": {
-                "allowed_mentions": {
-                    "parse": []
-                },
-                "content": "pong ponG PONG",
-                "embeds": [],
-                "tts": False
-                },
-                "type": 4
             }
-            })
+        }
 
 
     # Respond to /get_ip
