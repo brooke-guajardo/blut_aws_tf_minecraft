@@ -47,7 +47,15 @@ resource "aws_ecs_task_definition" "minecraft_server" {
         },
         {
           name = "EXISTING_WHITELIST_FILE"
-          value = "SYNCHRONIZE"
+          value = "MERGE"
+        },
+        {
+          name = "OPS"
+          value = "ConcentratedAndi,f_r_o_g_g_i_e,ElBigMacAttack,Jardo_Rook"
+        },
+        {
+          name = "EXISTING_OPS_FILE"
+          value = "MERGE"
         },
         {
           name = "MOTD"
