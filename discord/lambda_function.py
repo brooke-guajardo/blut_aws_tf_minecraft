@@ -52,7 +52,7 @@ def lambda_handler(event, context):
                 },
                 "type": 4
             },
-            "status_code": 200
+            "statusCode": 200
             })
 
 
