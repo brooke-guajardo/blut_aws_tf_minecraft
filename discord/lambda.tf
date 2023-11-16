@@ -51,7 +51,7 @@ data "aws_ecs_service" "mc_service" {
 }
 
 data "aws_ecs_task_definition" "mc_td" {
-  task_definition = data.aws_ecs_task_definition.minecraft-server-task-def.family
+  task_definition = "minecraft-server-task-def"
 }
 
 
