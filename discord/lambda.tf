@@ -47,7 +47,7 @@ data "aws_iam_policy_document" "lambda_get_ip" {
       "ecs:DescribeTasks"
     ]
     resources = [
-      "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:task-definition/minecraft-server-task-def/*"
+      "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:task-definition/minecraft-server-task-def*"
     ]
   }
 
