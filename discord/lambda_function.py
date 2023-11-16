@@ -51,8 +51,7 @@ def lambda_handler(event, context):
                 "tts": False
                 },
                 "type": 4
-            },
-            "statusCode": 200
+            }
             })
 
 
