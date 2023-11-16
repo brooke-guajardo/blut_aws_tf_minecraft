@@ -84,7 +84,7 @@ resource "aws_iam_policy" "lambda_get_ip_policy" {
   policy = data.aws_iam_policy_document.lambda_get_ip.json
 }
 
-resource "aws_iam_role_policy_attachment" "ecs_tasks_efs_role" {
-  role       = aws_iam_role.ecs_tasks_execution_role.name
+resource "aws_iam_role_policy_attachment" "lambda_get_ip_role" {
+  role       = aws_iam_role.lambda_exec.name
   policy_arn = aws_iam_policy.lambda_get_ip_policy.arn
 }
