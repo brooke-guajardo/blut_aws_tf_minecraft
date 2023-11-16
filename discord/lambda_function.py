@@ -51,6 +51,7 @@ def lambda_handler(event, context):
 
     # Respond to /get_ip
     if body_json['data']['name'] == 'get_ip':
+        print("Starting to fetch IP")
         client = boto3.client('ecs',region_name='us-east-1')
 
         task_response = client.list_tasks(
@@ -73,7 +74,6 @@ def lambda_handler(event, context):
             if detail['name'] == 'networkInterfaceId':
                 eni_resource = boto3.resource("ec2",region_name='us-east-1').NetworkInterface(detail['value'])
                 eni = eni_resource.association_attribute.get("PublicIp")
-                print("get ip")
                 response_payload = {
                     "type": 4,
                     "data": {
