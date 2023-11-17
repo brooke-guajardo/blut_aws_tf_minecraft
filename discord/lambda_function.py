@@ -44,7 +44,8 @@ def lambda_handler(event, context):
     if body_json['data']['name'] == 'get_ip':
         print("[INFO] Starting to Fetch IP ...")
         try:
-            get_ip()
+            mc_ip = get_ip()
+            return generate_response(f"Server IP is: {mc_ip}")
         except Exception as e:
             print(f"{e}")
             return generate_response(f"{e}")
@@ -103,6 +104,6 @@ def get_ip():
         if detail['name'] == 'networkInterfaceId':
             eni_resource = boto3.resource("ec2",region_name='us-east-1').NetworkInterface(detail['value'])
             eni = eni_resource.association_attribute.get("PublicIp")
-            return generate_response(f"Server IP is: {eni}")
+            return eni
     
     raise Exception("Boto3 failed to pull IP. Bad boto3!")
