@@ -58,6 +58,7 @@ def lambda_handler(event, context):
     }
 
 def generate_response(data, status_code=200):
+    print(data)
     response_payload = {
     "type": 4,
     "data": {
