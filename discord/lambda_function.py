@@ -62,7 +62,7 @@ def generate_response(data, status_code=200):
     "type": 4,
     "data": {
         "tts": False,
-        "content": f"{data}",
+        "content": data,
         "embeds": [],
         "allowed_mentions": {"parse": []}
         }
