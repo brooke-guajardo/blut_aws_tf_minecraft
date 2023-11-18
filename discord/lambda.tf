@@ -67,7 +67,7 @@ data "aws_iam_policy_document" "lambda_get_ip" {
       "ecs:UpdateService"
     ]
     resources = [
-      module.ecs.minecraft_ecs_arn
+      data.terraform_remote_state.local_ecs.outputs.minecraft_ecs_arn
     ]
   }
 }
