@@ -8,3 +8,7 @@ variable "region" {
 variable "public_key" {
   description = "pubkey of discord bot"
 }
+
+variable "cf_api_key" {
+  description = "curse forge api key"
+}
