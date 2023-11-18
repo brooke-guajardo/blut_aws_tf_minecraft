@@ -54,6 +54,7 @@ def lambda_handler(event, context):
         try:
             boto_response = scale_count(0)
             print(f"{boto_response}")
+            return generate_response(f"Scaled instance count to 0. I.e. MC server is shutting down.")
         except Exception as e:
             print(f"{e}")
             return generate_response(f"Error occurred @jardorook look at them logs!")
@@ -62,6 +63,7 @@ def lambda_handler(event, context):
         try:
             boto_response = scale_count(1)
             print(f"{boto_response}")
+            return generate_response(f"Scaled instance count to 1. I.e. MC server is starting up.")
         except Exception as e:
             print(f"{e}")
             return generate_response(f"Error occurred @jardorook look at them logs!")
