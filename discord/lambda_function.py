@@ -34,56 +34,22 @@ def lambda_handler(event, context):
         }
 
 
-    # Respond to /ping test
+    # Bot Access and Channel Ping Pong Test
     if body_json['data']['name'] == 'ping':
         print("attempting to pong ):")
-        response_payload = {
-            "type": 4,
-            "data": {
-                "tts": False,
-                "content": "pong",
-                "embeds": [],
-                "allowed_mentions": {"parse": []}
-            }
-        }
-        return generate_response(response_payload)
+        return generate_response("pong")
 
 
-    # Respond to /get_ip
+    # Bot get_ip slash command
     if body_json['data']['name'] == 'get_ip':
-        print("Starting to fetch IP")
-        client = boto3.client('ecs',region_name='us-east-1')
+        print("[INFO] Starting to Fetch IP ...")
+        try:
+            mc_ip = get_ip()
+            return generate_response(f"Server IP is: {mc_ip}")
+        except Exception as e:
+            print(f"{e}")
+            return generate_response(f"{e}")
 
-        task_response = client.list_tasks(
-            cluster='minecraft_server',
-            serviceName='minecraft_server',
-            desiredStatus='RUNNING',
-            launchType='FARGATE'
-        )
-
-        task = task_response['taskArns'][0]
-
-        detail_response = client.describe_tasks(
-            cluster='minecraft_server',
-            tasks=[
-                task,
-            ]
-        )
-
-        for detail in detail_response['tasks'][0]['attachments'][0]['details']:
-            if detail['name'] == 'networkInterfaceId':
-                eni_resource = boto3.resource("ec2",region_name='us-east-1').NetworkInterface(detail['value'])
-                eni = eni_resource.association_attribute.get("PublicIp")
-                response_payload = {
-                    "type": 4,
-                    "data": {
-                        "tts": False,
-                        "content": f"Server IP is: {eni}",
-                        "embeds": [],
-                        "allowed_mentions": {"parse": []}
-                    }
-                }
-                return generate_response(response_payload)
 
     
     # 404 if gets to here, handlers failed or command was not valid
@@ -93,6 +59,16 @@ def lambda_handler(event, context):
     }
 
 def generate_response(data, status_code=200):
+    print(data)
+    response_payload = {
+    "type": 4,
+    "data": {
+        "tts": False,
+        "content": data,
+        "embeds": [],
+        "allowed_mentions": {"parse": []}
+        }
+    }
     headers = {
         "Content-Type": "application/json"
     }
@@ -100,7 +76,34 @@ def generate_response(data, status_code=200):
     response = {
         "statusCode": status_code,
         "headers": headers,
-        "body": json.dumps(data)
+        "body": json.dumps(response_payload)
     }
 
     return response
+
+def get_ip():
+    client = boto3.client('ecs',region_name='us-east-1')
+
+    task_response = client.list_tasks(
+        cluster='minecraft_server',
+        serviceName='minecraft_server',
+        desiredStatus='RUNNING',
+        launchType='FARGATE'
+    )
+
+    task = task_response['taskArns'][0]
+
+    detail_response = client.describe_tasks(
+        cluster='minecraft_server',
+        tasks=[
+            task,
+        ]
+    )
+
+    for detail in detail_response['tasks'][0]['attachments'][0]['details']:
+        if detail['name'] == 'networkInterfaceId':
+            eni_resource = boto3.resource("ec2",region_name='us-east-1').NetworkInterface(detail['value'])
+            eni = eni_resource.association_attribute.get("PublicIp")
+            return eni
+    
+    raise Exception("Boto3 failed to pull IP. Bad boto3!")
