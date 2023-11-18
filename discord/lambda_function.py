@@ -50,8 +50,24 @@ def lambda_handler(event, context):
             print(f"{e}")
             return generate_response(f"{e}")
 
+    if body_json['data']['name'] == 'turn_off_mc':
+        try:
+            boto_response = scale_count(0)
+            print(f"{boto_response}")
+            return generate_response(f"Scaled instance count to 0. I.e. MC server is shutting down.")
+        except Exception as e:
+            print(f"{e}")
+            return generate_response(f"Error occurred @jardorook look at them logs!")
 
-    
+    if body_json['data']['name'] == 'turn_on_mc':
+        try:
+            boto_response = scale_count(1)
+            print(f"{boto_response}")
+            return generate_response(f"Scaled instance count to 1. I.e. MC server is starting up.")
+        except Exception as e:
+            print(f"{e}")
+            return generate_response(f"Error occurred @jardorook look at them logs!")
+
     # 404 if gets to here, handlers failed or command was not valid
     print(f"never caught")
     return {
@@ -107,3 +123,12 @@ def get_ip():
             return eni
     
     raise Exception("Boto3 failed to pull IP. Bad boto3!")
+
+def scale_count(count: int):
+    client = boto3.client('ecs',region_name='us-east-1')
+    off_response = client.update_service(
+    cluster='minecraft_server',
+    service='minecraft_server',
+    desiredCount=count)
+
+    return off_response
