@@ -1,0 +1,10 @@
+# python venv
+.venv/  
+
+# tf files
+*.tfstate
+*.tfstate.backup
+*.lock.hcl
+
+# lambda function zip
+*.zip
