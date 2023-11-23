@@ -183,7 +183,7 @@ def rcon_save(rpass):
 
     rcon_response = rcon.command("/save-all")
     rcon.stop()
-    return rcon_response
+    return rcon_response[:-4]
 
 def rcon_list(rpass):
     rcon = RCONClient(get_ip())
