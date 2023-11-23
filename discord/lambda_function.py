@@ -215,7 +215,7 @@ def interaction_reply(data, application_id, interaction_token):
     print(url)
 
     json = {
-        "type": 4,
+        "wait": True,
         "data": {
             "content": data
         }
