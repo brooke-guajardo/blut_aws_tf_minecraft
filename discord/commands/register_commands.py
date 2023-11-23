@@ -46,20 +46,6 @@ commands_to_register = [
     }
 ]
 
-# Delete commands in bulk to reset if needed
-for command in commands_to_register:
-    command_url = url + f"/{command['name']}"
-    print(command_url)
-    response = requests.delete(command_url, json=command, headers=headers)
-
-    if response.status_code == 204:
-        print(f"Command '{command['name']}' deleted successfully!")
-    else:
-        print(f"Failed to delete command '{command['name']}'. Status code: {response.status_code}")
-        print(response.text)  # To see the error message from Discord, if any
-    time.sleep(1)
-
-
 # Register commands in bulk
 for command in commands_to_register:
     command_url = url
@@ -71,3 +57,11 @@ for command in commands_to_register:
         print(f"Failed to register command '{command['name']}'. Status code: {response.status_code}")
         print(response.text)  # To see the error message from Discord, if any
     time.sleep(1)
+
+# Bulk overwrite if already registered and updating
+response = requests.put(url, json=commands_to_register, headers=headers)
+if response.status_code == 200:
+    print(f"Bulk overwrite ran successfully, output:{response}")
+else:
+    print(f"Failed to bulk overwrite. Status code: {response.status_code}")
+    print(response.text)
