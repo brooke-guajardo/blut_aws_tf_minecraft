@@ -2,6 +2,7 @@ import boto3
 import os
 import nacl
 import json
+import mctools
 from mctools import RCONClient
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
@@ -38,7 +39,7 @@ def lambda_handler(event, context):
 
     # Bot Access and Channel Ping Pong Test
     if body_json['data']['name'] == 'ping':
-        print("attempting to pong ):")
+        print("attempting to pong...")
         return generate_response("pong")
 
 
@@ -181,5 +182,5 @@ def rcon_list(rpass):
     
     rcon_response = rcon.command("/list")
     rcon.stop()
-    return rcon_response
+    return rcon_response.strip()
         

@@ -8,3 +8,6 @@
 
 # lambda function zip
 *.zip
+
+# misc
+.vscode/
