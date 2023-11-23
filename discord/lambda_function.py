@@ -208,8 +208,8 @@ def interaction_response(data, interaction_id, interaction_token):
     }
     r = requests.post(url, json=json)
 
-def interaction_reply(data, interaction_id, interaction_token):
-    url = f"https://discord.com/api/v10/webhooks/{application.id}/{interaction_token}"
+def interaction_reply(data, application_id, interaction_token):
+    url = f"https://discord.com/api/v10/webhooks/{application_id}/{interaction_token}"
 
     json = {
         "type": 4,
