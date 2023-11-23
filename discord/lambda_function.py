@@ -165,7 +165,7 @@ def rcon_save(rpass):
     rcon.command("/say - Server is saving, it may also be shutting down. -")
     rcon.command("/say ------------------------------------------")
 
-    repsonse = rcon.command("/save-all")
+    response = rcon.command("/save-all")
     rcon.stop()
     return response
 
