@@ -211,10 +211,14 @@ def interaction_response(data, interaction_id, interaction_token):
 def interaction_reply(data, application_id, interaction_token):
     url = f"https://discord.com/api/v10/webhooks/{application_id}/{interaction_token}"
 
+    headers = {
+        "Content-Type": "application/json"
+    }
+
     json = {
         "type": 4,
         "data": {
             "content": data
         }
     }
-    r = requests.post(url, json=json)
+    r = requests.post(url, json=json, headers=headers)
