@@ -2,6 +2,7 @@ import boto3
 import os
 import nacl
 import json
+from mctools import RCONClient
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
 
@@ -71,7 +72,7 @@ def lambda_handler(event, context):
             print(f"{e}")
             return generate_response(f"Error occurred @jardorook look at them logs!")
 
-     if body_json['data']['name'] == 'who_online':
+    if body_json['data']['name'] == 'who_online':
         try:
             rcon_response = rcon_list(rconPass)
             print(f"{rcon_response}")
@@ -80,7 +81,7 @@ def lambda_handler(event, context):
             print(f"{e}")
             return generate_response(f"Error occurred @jardorook look at them logs!")   
 
-     if body_json['data']['name'] == 'save_mc':
+    if body_json['data']['name'] == 'save_mc':
         try:
             rcon_response = rcon_save(rconPass)
             return generate_response(f"{rcon_response}")
