@@ -1,5 +1,6 @@
 import os
 import requests
+import time
 
 app_id = os.environ.get('DISCORD_APP_ID')
 guild_id = os.environ.get('DISCORD_SERVER_ID')
@@ -55,6 +56,7 @@ for command in commands_to_register:
     else:
         print(f"Failed to delete command '{command['name']}'. Status code: {response.status_code}")
         print(response.text)  # To see the error message from Discord, if any
+    time.sleep(1)
 
 
 # Register commands in bulk
@@ -67,3 +69,4 @@ for command in commands_to_register:
     else:
         print(f"Failed to register command '{command['name']}'. Status code: {response.status_code}")
         print(response.text)  # To see the error message from Discord, if any
+    time.sleep(1)
