@@ -217,10 +217,12 @@ def interaction_reply(data, application_id, interaction_token):
     }
 
     json = {
-        "type": 4,
         "data": {
-            "content": data
-        }
+            "tts": False,
+            "content": data,
+            "embeds": [],
+            "allowed_mentions": {"parse": []}
+            }
     }
     r = requests.post(url, json=json, headers=headers)
 
