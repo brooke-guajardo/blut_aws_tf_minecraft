@@ -52,22 +52,22 @@ for command in commands_to_register:
     print(command_url)
     response = requests.delete(command_url, json=command, headers=headers)
 
-    # if response.status_code == 204:
-    #     print(f"Command '{command['name']}' deleted successfully!")
-    # else:
-    #     print(f"Failed to delete command '{command['name']}'. Status code: {response.status_code}")
-    #     print(response.text)  # To see the error message from Discord, if any
+    if response.status_code == 204:
+        print(f"Command '{command['name']}' deleted successfully!")
+    else:
+        print(f"Failed to delete command '{command['name']}'. Status code: {response.status_code}")
+        print(response.text)  # To see the error message from Discord, if any
     time.sleep(1)
 
 
 # Register commands in bulk
 for command in commands_to_register:
     command_url = url
-    # response = requests.post(command_url, json=command, headers=headers)
+    response = requests.post(command_url, json=command, headers=headers)
 
-    # if response.status_code == 201:
-    #     print(f"Command '{command['name']}' registered successfully!")
-    # else:
-    #     print(f"Failed to register command '{command['name']}'. Status code: {response.status_code}")
-    #     print(response.text)  # To see the error message from Discord, if any
+    if response.status_code == 201:
+        print(f"Command '{command['name']}' registered successfully!")
+    else:
+        print(f"Failed to register command '{command['name']}'. Status code: {response.status_code}")
+        print(response.text)  # To see the error message from Discord, if any
     time.sleep(1)
