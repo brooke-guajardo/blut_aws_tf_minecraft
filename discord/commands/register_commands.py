@@ -26,12 +26,22 @@ commands_to_register = [
     {
         "name": "turn_off_mc",
         "type": 1,
-        "description": "Turn off mc fargate server by scaling instances down to 0."
+        "description": "Turn off mc fargate server by scaling instances down to 0. This should also save before scaling down."
     },
     {
         "name": "turn_on_mc",
         "type": 1,
         "description": "Turn on mc fargate server by scaling instances up to 1."
+    },
+    {
+        "name": "who_online",
+        "type": 1,
+        "description": "List users that are online connected to the server."
+    },
+    {
+        "name": "save_mc",
+        "type": 1,
+        "description": "Run RCON /save-all to save the world."
     }
 ]
 

@@ -20,6 +20,7 @@ export AWS_ACCESS_KEY_ID=your_aws_access_key
 export AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
 export AWS_ACCOUNT_ID=your_aws_account_id
 export AWS_REGION=your_aws_region
+export TF_VAR_public_key=your_public_key
 
 cd build
 docker build . -t jardo_minecraft:v1.0.0
@@ -34,6 +35,9 @@ docker push "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com/minecraft:
 # env vars set NOT RECOMMMENDED (:
 export AWS_ACCESS_KEY_ID=your_aws_access_key
 export AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
+export TF_VAR_cf_api_key=your_curse_forge_api_key
+export TF_VAR_rcon_pass=your_rcon_password
+
 
 cd ecs
 terraform init

@@ -7,6 +7,7 @@ from nacl.exceptions import BadSignatureError
 
 def lambda_handler(event, context):
     print(event)
+    rconPass = os.environ['RCON_PASSWORD']
     botPubKey = os.environ['PUBLIC_KEY']
     verify_key = VerifyKey(bytes.fromhex(botPubKey))
 
@@ -52,9 +53,11 @@ def lambda_handler(event, context):
 
     if body_json['data']['name'] == 'turn_off_mc':
         try:
+            rcon_response = rcon_save(rconPass)
+            print(f"{rcon_response}")
             boto_response = scale_count(0)
             print(f"{boto_response}")
-            return generate_response(f"Scaled instance count to 0. I.e. MC server is shutting down.")
+            return generate_response(f"RCON saving server.\n{rcon_response}Scaled instance count to 0. I.e. MC server is shutting down.")
         except Exception as e:
             print(f"{e}")
             return generate_response(f"Error occurred @jardorook look at them logs!")
@@ -67,6 +70,23 @@ def lambda_handler(event, context):
         except Exception as e:
             print(f"{e}")
             return generate_response(f"Error occurred @jardorook look at them logs!")
+
+     if body_json['data']['name'] == 'who_online':
+        try:
+            rcon_response = rcon_list(rconPass)
+            print(f"{rcon_response}")
+            return generate_response(f"{rcon_response}")
+        except Exception as e:
+            print(f"{e}")
+            return generate_response(f"Error occurred @jardorook look at them logs!")   
+
+     if body_json['data']['name'] == 'save_mc':
+        try:
+            rcon_response = rcon_save(rconPass)
+            return generate_response(f"{rcon_response}")
+        except Exception as e:
+            print(f"{e}")
+            return generate_response(f"Error occurred @jardorook look at them logs!")   
 
     # 404 if gets to here, handlers failed or command was not valid
     print(f"never caught")
@@ -130,3 +150,34 @@ def scale_count(count: int):
     desiredCount=count)
 
     return off_response
+
+def rcon_save(rpass):
+    rcon = RCONClient(get_ip())
+    success = rcon.login(rpass)
+
+    # If rcon failed to auth, it supports retries but meh
+    if success == False:
+        print(f"RCON Failed to login")
+        raise Exception("RCON Failed to login")
+
+    rcon.command("/say ------------------------------------------")
+    rcon.command("/say - Server is saving, it may also be shutting down. -")
+    rcon.command("/say ------------------------------------------")
+
+    repsonse = rcon.command("/save-all")
+    rcon.stop()
+    return response
+
+def rcon_list(rpass):
+    rcon = RCONClient(get_ip())
+    success = rcon.login(rpass)
+
+    # If rcon failed to auth, it supports retries but meh
+    if success == False:
+        print(f"RCON Failed to login")
+        raise Exception("RCON Failed to login")
+    
+    response = rcon.command("/list")
+    rcon.stop()
+    return response
+        

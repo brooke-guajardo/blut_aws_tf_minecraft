@@ -7,7 +7,7 @@ resource "aws_lambda_function" "blut_aws_tf_minecraft_lambda" {
   runtime = "python3.9"
   handler = "lambda_function.lambda_handler"
 
-  timeout = 10
+  timeout = 120
 
   source_code_hash = filebase64sha256("${path.module}/deployment_package.zip")
 
@@ -15,6 +15,7 @@ resource "aws_lambda_function" "blut_aws_tf_minecraft_lambda" {
   environment {
     variables = {
       PUBLIC_KEY = var.public_key
+      RCON_PASSWORD = var.rcon_pass
     }
   }
 }
