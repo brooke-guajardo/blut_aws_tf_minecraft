@@ -215,10 +215,7 @@ def interaction_reply(data, application_id, interaction_token):
     print(url)
 
     json = {
-        "wait": True,
-        "data": {
-            "content": data
-        }
+        "content": data
     }
     r = requests.post(url, json=json)
 
