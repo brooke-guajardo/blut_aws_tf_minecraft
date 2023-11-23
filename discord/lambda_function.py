@@ -44,6 +44,7 @@ def lambda_handler(event, context):
         print("[INFO] attempting to pong...")
         interaction_response(f"This is a response to an interaction 'pong'.", body_json['id'],body_json['token'])
         interaction_reply(f"This is a second response to an interaction 'pong'.", disAppID, body_json['token'])
+        return generate_response("pong.")
 
     # Bot get_ip slash command
     if body_json['data']['name'] == 'get_ip':
@@ -222,3 +223,5 @@ def interaction_reply(data, application_id, interaction_token):
         }
     }
     r = requests.post(url, json=json, headers=headers)
+
+    print(r)
