@@ -56,6 +56,8 @@ def lambda_handler(event, context):
             return generate_response(f"end of get ip")
         except Exception as e:
             print(f"[ERROR] get_ip: {e}")
+            interaction_reply(f"[ERROR] get_ip: @jardorook look at them logs!", disAppID, body_json['token'])
+        finally:
             return generate_response(f"[ERROR] get_ip: @jardorook look at them logs!")
 
     if body_json['data']['name'] == 'turn_off_mc':
@@ -70,6 +72,8 @@ def lambda_handler(event, context):
             return generate_response(f"end of turning off MC server")
         except Exception as e:
             print(f"[ERROR] turn_off_mc: {e}")
+            interaction_reply(f"[ERROR] turn_off_mc: @jardorook look at them logs!", disAppID, body_json['token'])
+        finally:
             return generate_response(f"[ERROR] turn_off_mc: @jardorook look at them logs!")
 
     if body_json['data']['name'] == 'turn_on_mc':
@@ -81,6 +85,8 @@ def lambda_handler(event, context):
             return generate_response(f"end of turning on MC server")
         except Exception as e:
             print(f"[ERROR] turn_on_mc: {e}")
+            interaction_reply(f"[ERROR] turn_on_mc: @jardorook look at them logs!", disAppID, body_json['token'])
+        finally:
             return generate_response(f"[ERROR] turn_on_mc: @jardorook look at them logs!")
 
     if body_json['data']['name'] == 'who_online':
@@ -92,6 +98,8 @@ def lambda_handler(event, context):
             return generate_response(f"end of checking who is online")
         except Exception as e:
             print(f"[ERROR] who_online: {e}")
+            interaction_reply(f"[ERROR] who_online: @jardorook look at them logs!", disAppID, body_json['token'])
+        finally:
             return generate_response(f"[ERROR] who_online: @jardorook look at them logs!")   
 
     if body_json['data']['name'] == 'save_mc':
@@ -102,6 +110,8 @@ def lambda_handler(event, context):
             return generate_response(f"end of saving server")
         except Exception as e:
             print(f"[ERROR] save_mc: {e}")
+            interaction_reply(f"[ERROR] save_mc: @jardorook look at them logs!", disAppID, body_json['token'])
+        finally:
             return generate_response(f"[ERROR] save_mc: @jardorook look at them logs!")   
 
     # 404 if gets to here, handlers failed or command was not valid
@@ -168,7 +178,6 @@ def scale_count(count: int):
     return off_response
 
 def rcon_save(rpass):
-    print("meow")
     rcon = RCONClient(get_ip())
     success = rcon.login(rpass)
 
@@ -176,7 +185,7 @@ def rcon_save(rpass):
     if success == False:
         print(f"RCON Failed to login")
         raise Exception("RCON Failed to login")
-    print("bork")
+
     rcon.command("/say ------------------------------------------")
     rcon.command("/say - Server is saving, it may also be shutting down. -")
     rcon.command("/say ------------------------------------------")
