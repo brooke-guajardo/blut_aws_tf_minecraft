@@ -16,6 +16,7 @@ resource "aws_lambda_function" "blut_aws_tf_minecraft_lambda" {
     variables = {
       PUBLIC_KEY = var.public_key
       RCON_PASSWORD = var.rcon_pass
+      DISCORD_APP_ID = var.discord_app_id
     }
   }
 }

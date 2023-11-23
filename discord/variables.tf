@@ -12,3 +12,7 @@ variable "public_key" {
 variable "rcon_pass" {
   description = "RCON password"
 }
+
+variable "discord_app_id" {
+  description = "Discord bots APPLICATION ID"
+}

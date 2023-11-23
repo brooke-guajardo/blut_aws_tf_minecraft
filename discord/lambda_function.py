@@ -12,6 +12,7 @@ def lambda_handler(event, context):
     print(event)
     rconPass = os.environ['RCON_PASSWORD']
     botPubKey = os.environ['PUBLIC_KEY']
+    disAppID = os.environ['DISCORD_APP_ID']
     verify_key = VerifyKey(bytes.fromhex(botPubKey))
 
     signature = event['headers']['x-signature-ed25519']
@@ -42,9 +43,7 @@ def lambda_handler(event, context):
     if body_json['data']['name'] == 'ping':
         print("[INFO] attempting to pong...")
         interaction_response(f"This is a response to an interaction 'pong'.", body_json['id'],body_json['token'])
-        interaction_response(f"This is a second response to an interaction 'pong'.", body_json['id'],body_json['token'])
-        return generate_response("bye pong")
-
+        interaction_reply(f"This is a second response to an interaction 'pong'.", disAppID, body_json['token'])
 
     # Bot get_ip slash command
     if body_json['data']['name'] == 'get_ip':
@@ -189,6 +188,28 @@ def rcon_list(rpass):
         
 def interaction_response(data, interaction_id, interaction_token):
     url = f"https://discord.com/api/v10/interactions/{interaction_id}/{interaction_token}/callback"
+
+    json = {
+        "type": 4,
+        "data": {
+            "content": data
+        }
+    }
+    r = requests.post(url, json=json)
+
+def interaction_response(data, interaction_id, interaction_token):
+    url = f"https://discord.com/api/v10/interactions/{interaction_id}/{interaction_token}/callback"
+
+    json = {
+        "type": 4,
+        "data": {
+            "content": data
+        }
+    }
+    r = requests.post(url, json=json)
+
+def interaction_reply(data, interaction_id, interaction_token):
+    url = f"https://discord.com/api/v10/webhooks/{application.id}/{interaction_token}"
 
     json = {
         "type": 4,
