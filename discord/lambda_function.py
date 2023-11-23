@@ -2,6 +2,7 @@ import boto3
 import os
 import nacl
 import json
+import requests
 import mctools
 from mctools import RCONClient
 from nacl.signing import VerifyKey
@@ -39,8 +40,9 @@ def lambda_handler(event, context):
 
     # Bot Access and Channel Ping Pong Test
     if body_json['data']['name'] == 'ping':
-        print("attempting to pong...")
-        return generate_response("pong")
+        print("[INFO] attempting to pong...")
+        return generate_response("ack pong")
+        interaction_response(f"This is a response to an interaction 'pong'.", body_json['id'],body_json['token'])
 
 
     # Bot get_ip slash command
@@ -182,5 +184,17 @@ def rcon_list(rpass):
     
     rcon_response = rcon.command("/list")
     rcon.stop()
-    return rcon_response.strip()
+    return rcon_response[:-4]
         
+def interaction_response(data, interaction_id, interaction_token):
+    url = f"https://discord.com/api/v10/interactions/{interaction_id}/{interaction_token}/callback"
+
+    json = {
+        "type": 4,
+        "data": {
+            "content": data
+        }
+    }
+    r = requests.post(url, json=json)
+    return
+
