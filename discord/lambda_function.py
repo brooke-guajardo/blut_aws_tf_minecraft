@@ -41,8 +41,8 @@ def lambda_handler(event, context):
     # Bot Access and Channel Ping Pong Test
     if body_json['data']['name'] == 'ping':
         print("[INFO] attempting to pong...")
-        return generate_response("ack pong")
         interaction_response(f"This is a response to an interaction 'pong'.", body_json['id'],body_json['token'])
+        return generate_response("bye pong")
 
 
     # Bot get_ip slash command
