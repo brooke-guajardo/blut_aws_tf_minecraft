@@ -2,12 +2,17 @@ import boto3
 import os
 import nacl
 import json
+import requests
+import mctools
+from mctools import RCONClient
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
 
 def lambda_handler(event, context):
     print(event)
+    rconPass = os.environ['RCON_PASSWORD']
     botPubKey = os.environ['PUBLIC_KEY']
+    disAppID = os.environ['DISCORD_APP_ID']
     verify_key = VerifyKey(bytes.fromhex(botPubKey))
 
     signature = event['headers']['x-signature-ed25519']
@@ -36,43 +41,82 @@ def lambda_handler(event, context):
 
     # Bot Access and Channel Ping Pong Test
     if body_json['data']['name'] == 'ping':
-        print("attempting to pong ):")
-        return generate_response("pong")
-
+        print("[INFO] attempting to pong...")
+        interaction_response(f"po-", body_json['id'],body_json['token'])
+        interaction_reply(f"-ng", disAppID, body_json['token'])
+        return generate_response("pong.")
 
     # Bot get_ip slash command
     if body_json['data']['name'] == 'get_ip':
         print("[INFO] Starting to Fetch IP ...")
         try:
+            interaction_response(f"ACK fetching IP", body_json['id'],body_json['token'])
             mc_ip = get_ip()
-            return generate_response(f"Server IP is: {mc_ip}")
+            interaction_reply(f"Server IP is: {mc_ip}", disAppID, body_json['token'])
+            return generate_response(f"end of get ip")
         except Exception as e:
-            print(f"{e}")
-            return generate_response(f"{e}")
+            print(f"[ERROR] get_ip: {e}")
+            interaction_reply(f"[ERROR] get_ip: @jardorook look at them logs!", disAppID, body_json['token'])
+        finally:
+            return generate_response(f"[ERROR] get_ip: @jardorook look at them logs!")
 
     if body_json['data']['name'] == 'turn_off_mc':
         try:
+            interaction_response(f"ACK turning off MC server", body_json['id'],body_json['token'])
+            rcon_response = rcon_save(rconPass)
+            print(f"{rcon_response}")
+            interaction_reply(f"RCON saving server.\n{rcon_response}", disAppID, body_json['token'])
             boto_response = scale_count(0)
             print(f"{boto_response}")
-            return generate_response(f"Scaled instance count to 0. I.e. MC server is shutting down.")
+            interaction_reply(f"Boto3 scaled down server", disAppID, body_json['token'])
+            return generate_response(f"end of turning off MC server")
         except Exception as e:
-            print(f"{e}")
-            return generate_response(f"Error occurred @jardorook look at them logs!")
+            print(f"[ERROR] turn_off_mc: {e}")
+            interaction_reply(f"[ERROR] turn_off_mc: @jardorook look at them logs!", disAppID, body_json['token'])
+        finally:
+            return generate_response(f"[ERROR] turn_off_mc: @jardorook look at them logs!")
 
     if body_json['data']['name'] == 'turn_on_mc':
         try:
+            interaction_response(f"ACK turning on MC server", body_json['id'],body_json['token'])
             boto_response = scale_count(1)
             print(f"{boto_response}")
-            return generate_response(f"Scaled instance count to 1. I.e. MC server is starting up.")
+            interaction_reply(f"Boto3 scaled instance count to 1. I.e. MC server is starting up.", disAppID, body_json['token'])
+            return generate_response(f"end of turning on MC server")
         except Exception as e:
-            print(f"{e}")
-            return generate_response(f"Error occurred @jardorook look at them logs!")
+            print(f"[ERROR] turn_on_mc: {e}")
+            interaction_reply(f"[ERROR] turn_on_mc: @jardorook look at them logs!", disAppID, body_json['token'])
+        finally:
+            return generate_response(f"[ERROR] turn_on_mc: @jardorook look at them logs!")
+
+    if body_json['data']['name'] == 'who_online':
+        try:
+            interaction_response(f"ACK checking who is online connected to MC server", body_json['id'],body_json['token'])
+            rcon_response = rcon_list(rconPass)
+            print(f"{rcon_response}")
+            interaction_reply(f"{rcon_response}", disAppID, body_json['token'])
+            return generate_response(f"end of checking who is online")
+        except Exception as e:
+            print(f"[ERROR] who_online: {e}")
+            interaction_reply(f"[ERROR] who_online: @jardorook look at them logs!", disAppID, body_json['token'])
+        finally:
+            return generate_response(f"[ERROR] who_online: @jardorook look at them logs!")   
+
+    if body_json['data']['name'] == 'save_mc':
+        try:
+            interaction_response(f"ACK running RCON /save-all", body_json['id'],body_json['token'])
+            rcon_response = rcon_save(rconPass)
+            interaction_reply(f"{rcon_response}", disAppID, body_json['token'])
+            return generate_response(f"end of saving server")
+        except Exception as e:
+            print(f"[ERROR] save_mc: {e}")
+            interaction_reply(f"[ERROR] save_mc: @jardorook look at them logs!", disAppID, body_json['token'])
+        finally:
+            return generate_response(f"[ERROR] save_mc: @jardorook look at them logs!")   
 
     # 404 if gets to here, handlers failed or command was not valid
     print(f"never caught")
-    return {
-        "statusCode": 404
-    }
+    return generate_response(f"Something went wrong dawg. Jardo go fix you crap!")
 
 def generate_response(data, status_code=200):
     print(data)
@@ -132,3 +176,63 @@ def scale_count(count: int):
     desiredCount=count)
 
     return off_response
+
+def rcon_save(rpass):
+    rcon = RCONClient(get_ip())
+    success = rcon.login(rpass)
+
+    # If rcon failed to auth, it supports retries but meh
+    if success == False:
+        print(f"RCON Failed to login")
+        raise Exception("RCON Failed to login")
+
+    rcon.command("/say ------------------------------------------")
+    rcon.command("/say - Server is saving, it may also be shutting down. -")
+    rcon.command("/say ------------------------------------------")
+
+    rcon_response = rcon.command("/save-all")
+    rcon.stop()
+    return rcon_response[:-4]
+
+def rcon_list(rpass):
+    rcon = RCONClient(get_ip())
+    success = rcon.login(rpass)
+
+    # If rcon failed to auth, it supports retries but meh
+    if success == False:
+        print(f"RCON Failed to login")
+        raise Exception("RCON Failed to login")
+    
+    rcon_response = rcon.command("/list")
+    rcon.stop()
+    return rcon_response[:-4]
+        
+def interaction_response(data, interaction_id, interaction_token):
+    url = f"https://discord.com/api/v10/interactions/{interaction_id}/{interaction_token}/callback"
+
+    json = {
+        "type": 4,
+        "data": {
+            "content": data
+        }
+    }
+    r = requests.post(url, json=json)
+
+def interaction_response(data, interaction_id, interaction_token):
+    url = f"https://discord.com/api/v10/interactions/{interaction_id}/{interaction_token}/callback"
+
+    json = {
+        "type": 4,
+        "data": {
+            "content": data
+        }
+    }
+    r = requests.post(url, json=json)
+
+def interaction_reply(data, application_id, interaction_token):
+    url = f"https://discord.com/api/v10/webhooks/{application_id}/{interaction_token}"
+
+    json = {
+        "content": data
+    }  
+    r = requests.post(url, json=json)

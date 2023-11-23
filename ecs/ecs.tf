@@ -84,6 +84,14 @@ resource "aws_ecs_task_definition" "minecraft_server" {
         {
           name = "JVM_OPTS"
           value = "-Xms8g -Xmx16g"
+        },
+        {
+          name = "RCON_PASSWORD"
+          value = var.rcon_pass
+        },
+        {
+          name = "BROADCAST_RCON_TO_OPS"
+          value = "TRUE"
         }
       ]
       mountPoints   = [

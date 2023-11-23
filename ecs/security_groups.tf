@@ -5,15 +5,22 @@ resource "aws_security_group" "minecraft_sg" {
  
  # Using RCON player whitelist so not whitelisting CIDRs here, but wouldnt hurt to do tbh
   ingress {
-    description = "rule for inbound access"
+    description = "Rule for inbound access for players"
     from_port   = var.port
     to_port     = var.port
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
  
+  ingress {
+    description = "Rule for inbound access for RCON"
+    from_port   = 25575
+    to_port     = 25575
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
   egress {
-    description = "rule for outbound access"
+    description = "Rule for outbound access for server"
     from_port        = 0
     to_port          = 0
     protocol         = "-1"

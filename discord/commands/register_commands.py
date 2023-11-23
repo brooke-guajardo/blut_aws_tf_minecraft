@@ -1,5 +1,6 @@
 import os
 import requests
+import time
 
 app_id = os.environ.get('DISCORD_APP_ID')
 guild_id = os.environ.get('DISCORD_SERVER_ID')
@@ -26,26 +27,24 @@ commands_to_register = [
     {
         "name": "turn_off_mc",
         "type": 1,
-        "description": "Turn off mc fargate server by scaling instances down to 0."
+        "description": "Turn off mc fargate server by scaling instances down to 0. This should also save before scaling down."
     },
     {
         "name": "turn_on_mc",
         "type": 1,
         "description": "Turn on mc fargate server by scaling instances up to 1."
+    },
+    {
+        "name": "who_online",
+        "type": 1,
+        "description": "List users that are online connected to the server."
+    },
+    {
+        "name": "save_mc",
+        "type": 1,
+        "description": "Run RCON /save-all to save the world."
     }
 ]
-
-# Delete commands in bulk to reset if needed
-for command in commands_to_register:
-    command_url = url
-    response = requests.delete(command_url, json=command, headers=headers)
-
-    if response.status_code == 204:
-        print(f"Command '{command['name']}' deleted successfully!")
-    else:
-        print(f"Failed to delete command '{command['name']}'. Status code: {response.status_code}")
-        print(response.text)  # To see the error message from Discord, if any
-
 
 # Register commands in bulk
 for command in commands_to_register:
@@ -57,3 +56,12 @@ for command in commands_to_register:
     else:
         print(f"Failed to register command '{command['name']}'. Status code: {response.status_code}")
         print(response.text)  # To see the error message from Discord, if any
+    time.sleep(1)
+
+# Bulk overwrite if already registered and updating
+response = requests.put(url, json=commands_to_register, headers=headers)
+if response.status_code == 200:
+    print(f"Bulk overwrite ran successfully, output:{response}")
+else:
+    print(f"Failed to bulk overwrite. Status code: {response.status_code}")
+    print(response.text)

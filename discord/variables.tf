@@ -8,3 +8,11 @@ variable "region" {
 variable "public_key" {
   description = "pubkey of discord bot"
 }
+
+variable "rcon_pass" {
+  description = "RCON password"
+}
+
+variable "discord_app_id" {
+  description = "Discord bots APPLICATION ID"
+}
