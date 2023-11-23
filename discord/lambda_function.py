@@ -70,9 +70,7 @@ def lambda_handler(event, context):
 
     # 404 if gets to here, handlers failed or command was not valid
     print(f"never caught")
-    return {
-        "statusCode": 404
-    }
+    return generate_response(f"Something went wrong dawg. Jardo go fix you crap!")
 
 def generate_response(data, status_code=200):
     print(data)

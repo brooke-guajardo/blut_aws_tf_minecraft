@@ -36,3 +36,7 @@ variable "region" {
 variable "cf_api_key" {
   description = "api key from curseforge, provided during apply"
 }
+
+variable "rcon_pass" {
+  description = "RCON password"
+}
