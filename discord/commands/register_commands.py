@@ -58,15 +58,9 @@ for command in commands_to_register:
 
     if response.status_code == 201:
         print(f"Command '{command['name']}' registered successfully!")
+    elif response.status_code == 200:
+        print(f"Command '{command['name']}' updated successfully!")
     else:
         print(f"Failed to register command '{command['name']}'. Status code: {response.status_code}")
         print(response.text)  # To see the error message from Discord, if any
-    time.sleep(1)
-
-# Bulk overwrite if already registered and updating
-response = requests.put(url, json=commands_to_register, headers=headers)
-if response.status_code == 200:
-    print(f"Bulk overwrite ran successfully, output:{response}")
-else:
-    print(f"Failed to bulk overwrite. Status code: {response.status_code}")
-    print(response.text)
+    time.sleep(2)
