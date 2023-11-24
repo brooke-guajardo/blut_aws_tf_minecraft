@@ -28,9 +28,9 @@ def lambda_handler(event, context):
             "body": 'Invalid request signature',
         }
 
-    # Respond to Discord config ping
+    # Respond to Discord config ping, i.e. the 'INTERACTIONS ENDPOINT URL' test
     if body_json['type'] == 1:
-        print(f"GOOD")
+        print(f"INTERACTIONS ENDPOINT URL test received.")
         return {
             "statusCode": 200,
             "body": json.dumps({
@@ -48,17 +48,13 @@ def lambda_handler(event, context):
 
     # Bot get_ip slash command
     if body_json['data']['name'] == 'get_ip':
-        print("[INFO] Starting to Fetch IP ...")
-        try:
-            interaction_response(f"ACK fetching IP", body_json['id'],body_json['token'])
-            mc_ip = get_ip()
-            interaction_reply(f"Server IP is: {mc_ip}", disAppID, body_json['token'])
-            return generate_response(f"end of get ip")
-        except Exception as e:
-            print(f"[ERROR] get_ip: {e}")
-            interaction_reply(f"[ERROR] get_ip: @jardorook look at them logs!", disAppID, body_json['token'])
-        finally:
-            return generate_response(f"[ERROR] get_ip: @jardorook look at them logs!")
+        command_handler(
+            disAppID,
+            rconPass,
+            body_json,
+            "get_ip",
+            get_ip,
+        )
 
     if body_json['data']['name'] == 'turn_off_mc':
         try:
@@ -72,51 +68,62 @@ def lambda_handler(event, context):
             return generate_response(f"end of turning off MC server")
         except Exception as e:
             print(f"[ERROR] turn_off_mc: {e}")
-            interaction_reply(f"[ERROR] turn_off_mc: @jardorook look at them logs!", disAppID, body_json['token'])
+            interaction_reply(f"[ERROR] turn_off_mc", disAppID, body_json['token'])
         finally:
-            return generate_response(f"[ERROR] turn_off_mc: @jardorook look at them logs!")
+            return generate_response(f"[ERROR] turn_off_mc")
 
     if body_json['data']['name'] == 'turn_on_mc':
-        try:
-            interaction_response(f"ACK turning on MC server", body_json['id'],body_json['token'])
-            boto_response = scale_count(1)
-            print(f"{boto_response}")
-            interaction_reply(f"Boto3 scaled instance count to 1. I.e. MC server is starting up.", disAppID, body_json['token'])
-            return generate_response(f"end of turning on MC server")
-        except Exception as e:
-            print(f"[ERROR] turn_on_mc: {e}")
-            interaction_reply(f"[ERROR] turn_on_mc: @jardorook look at them logs!", disAppID, body_json['token'])
-        finally:
-            return generate_response(f"[ERROR] turn_on_mc: @jardorook look at them logs!")
+        command_handler(
+            disAppID,
+            rconPass,
+            body_json,
+            "turn_on_mc",
+            scale_count,
+            1
+        )
 
     if body_json['data']['name'] == 'who_online':
-        try:
-            interaction_response(f"ACK checking who is online connected to MC server", body_json['id'],body_json['token'])
-            rcon_response = rcon_list(rconPass)
-            print(f"{rcon_response}")
-            interaction_reply(f"{rcon_response}", disAppID, body_json['token'])
-            return generate_response(f"end of checking who is online")
-        except Exception as e:
-            print(f"[ERROR] who_online: {e}")
-            interaction_reply(f"[ERROR] who_online: @jardorook look at them logs!", disAppID, body_json['token'])
-        finally:
-            return generate_response(f"[ERROR] who_online: @jardorook look at them logs!")   
+        command_handler(
+            disAppID,
+            rconPass,
+            body_json,
+            "who_online",
+            rcon_list,
+            rconPass
+        )
 
     if body_json['data']['name'] == 'save_mc':
-        try:
-            interaction_response(f"ACK running RCON /save-all", body_json['id'],body_json['token'])
-            rcon_response = rcon_save(rconPass)
-            interaction_reply(f"{rcon_response}", disAppID, body_json['token'])
-            return generate_response(f"end of saving server")
-        except Exception as e:
-            print(f"[ERROR] save_mc: {e}")
-            interaction_reply(f"[ERROR] save_mc: @jardorook look at them logs!", disAppID, body_json['token'])
-        finally:
-            return generate_response(f"[ERROR] save_mc: @jardorook look at them logs!")   
+        command_handler(
+            disAppID,
+            rconPass,
+            body_json,
+            "who_online",
+            rcon_save,
+            rconPass
+        )
 
-    # 404 if gets to here, handlers failed or command was not valid
-    print(f"never caught")
-    return generate_response(f"Something went wrong dawg. Jardo go fix you crap!")
+    # I would return 404 here but then the command will just error with no info
+    # So pivoting to interaction reply so there is context in discord
+    print(f"[ERROR] Command made it to end without properly being handled. Either the command is invalid or the above did not exit properly.")
+    interaction_reply(f"[ERROR] End of Lambda", disAppID, body_json['token'])
+
+def command_handler(disAppID, rconPass, body_json, command_name, command_func, *args, **kwargs):
+    try:
+        interaction_response(f"ACK for {command_name} command", body_json['id'], body_json['token'])
+        response = command_func(*args, **kwargs)
+        # Debug Output
+        print(repsonse)
+        # Don't want boto3 output, it contains account info
+        if command_func != 'scale_count':
+            interaction_reply(response, disAppID, body_json['token'])
+        else:
+            interaction_reply(f"Scaling completed.", disAppID, body_json['token'])
+        return generate_response(f"End of {command_name} command")
+    except Exception as e:
+        print(f"[ERROR] {command_name}: {e}")
+        interaction_reply(f"[ERROR] {command_name}", disAppID, body_json['token'])
+    finally:
+        return generate_response(f"[ERROR] {command_name}")   
 
 def generate_response(data, status_code=200):
     print(data)
@@ -209,18 +216,6 @@ def rcon_list(rpass):
         
 def interaction_response(data, interaction_id, interaction_token):
     url = f"https://discord.com/api/v10/interactions/{interaction_id}/{interaction_token}/callback"
-
-    json = {
-        "type": 4,
-        "data": {
-            "content": data
-        }
-    }
-    r = requests.post(url, json=json)
-
-def interaction_response(data, interaction_id, interaction_token):
-    url = f"https://discord.com/api/v10/interactions/{interaction_id}/{interaction_token}/callback"
-
     json = {
         "type": 4,
         "data": {
@@ -231,7 +226,6 @@ def interaction_response(data, interaction_id, interaction_token):
 
 def interaction_reply(data, application_id, interaction_token):
     url = f"https://discord.com/api/v10/webhooks/{application_id}/{interaction_token}"
-
     json = {
         "content": data
     }  
