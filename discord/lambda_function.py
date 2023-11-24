@@ -54,6 +54,7 @@ def lambda_handler(event, context):
             "get_ip",
             get_ip,
         )
+        exit(0)
 
     if body_json['data']['name'] == 'turn_off_mc':
         function_list = [
@@ -68,6 +69,7 @@ def lambda_handler(event, context):
             "turn_off_mc",
             function_list
         )
+        exit(0)
 
     if body_json['data']['name'] == 'turn_on_mc':
         command_handler(
@@ -78,6 +80,7 @@ def lambda_handler(event, context):
             scale_count,
             1
         )
+        exit(0)
 
     if body_json['data']['name'] == 'who_online':
         command_handler(
@@ -88,6 +91,7 @@ def lambda_handler(event, context):
             rcon_list,
             rconPass
         )
+        exit(0)
 
     if body_json['data']['name'] == 'save_mc':
         command_handler(
@@ -98,6 +102,7 @@ def lambda_handler(event, context):
             rcon_save,
             rconPass
         )
+        exit(0)
 
     # I would return 404 here but then the command will just error with no info
     # So pivoting to interaction reply so there is context in discord
@@ -114,16 +119,14 @@ def command_handler(disAppID, rconPass, body_json, command_name, command_func, *
             interaction_reply(response, disAppID, body_json['token'])
         else:
             interaction_reply(f"Scaling completed.", disAppID, body_json['token'])
-        return generate_response(f"End of {command_name} command")
     except Exception as e:
         print(f"[ERROR] {command_name}: {e}")
         interaction_reply(f"[ERROR] {command_name}", disAppID, body_json['token'])
-        return generate_response(f"[ERROR] {command_name}")   
 
 def multi_command_handler(disAppID, rconPass, body_json, command_name, function_list, *args, **kwargs):
     try:
         interaction_response(f"ACK for {command_name} command", body_json['id'], body_json['token'])
-        for func, func_args in func_list:
+        for func, func_args in function_list:
             response = func(*func_args, **kwargs)
             print(f"Function: {func} \nResponse: {response}") # Debug Output
             # Don't want boto3 output, it contains account info
@@ -131,11 +134,9 @@ def multi_command_handler(disAppID, rconPass, body_json, command_name, function_
                 interaction_reply(response, disAppID, body_json['token'])
             else:
                 interaction_reply(f"Scaling completed.", disAppID, body_json['token'])
-        return generate_response(f"End of {command_name} command")
     except Exception as e:
         print(f"[ERROR] {command_name}: {e}")
         interaction_reply(f"[ERROR] {command_name}", disAppID, body_json['token'])
-        return generate_response(f"[ERROR] {command_name}")   
 
 def generate_response(data, status_code=200):
     print(data)
