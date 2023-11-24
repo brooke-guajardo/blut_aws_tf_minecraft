@@ -245,7 +245,8 @@ def component_response(data, interaction_id, interaction_token):
                         }
                     ]
                 }
-            ]
+            ],
+            "flags": 64
         }
     }
     r = requests.post(url, json=json)
