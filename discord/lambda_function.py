@@ -110,7 +110,7 @@ def command_handler(disAppID, body_json, command_name, command_func, *args, **kw
         response = command_func(*args, **kwargs)
         print(f"Return from {command_func}: {response}") # Debug Output
         # Don't want boto3 output, it contains account info
-        if command_func != 'scale_count':
+        if command_func != scale_count:
             interaction_reply(response, disAppID, body_json['token'])
         else:
             interaction_reply(f"Scaling completed.", disAppID, body_json['token'])
@@ -125,7 +125,7 @@ def multi_command_handler(disAppID, body_json, command_name, function_list, *arg
             response = func(*func_args, **kwargs)
             print(f"Function: {func} \nResponse: {response}") # Debug Output
             # Don't want boto3 output, it contains account info
-            if func != 'scale_count':
+            if func != scale_count:
                 interaction_reply(response, disAppID, body_json['token'])
             else:
                 interaction_reply(f"Scaling completed.", disAppID, body_json['token'])
