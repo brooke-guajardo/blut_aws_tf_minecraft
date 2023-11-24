@@ -17,22 +17,22 @@ commands_to_register = [
     {
         "name": "ping",
         "type": 1,
-        "description": "replies with pong, simple slash health check"
+        "description": "Replies with pong, simple slash health check."
     },
     {
         "name": "get_ip",
         "type": 1,
-        "description": "returns jardo's mc server IP address ... hopefully"
+        "description": "Retrieve MC server IP address."
     },
     {
         "name": "turn_off_mc",
         "type": 1,
-        "description": "Turn off mc fargate server by scaling instances down to 0. This should also save before scaling down."
+        "description": "Save state of MC server, then shut down."
     },
     {
         "name": "turn_on_mc",
         "type": 1,
-        "description": "Turn on mc fargate server by scaling instances up to 1."
+        "description": "Turn on MC fargate server by scaling instances up to 1."
     },
     {
         "name": "who_online",
