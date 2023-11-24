@@ -58,7 +58,7 @@ terraform apply
 ## 4. Deploy Lambda, API Gateway, and supporting Infrastructure (Discord Bot)
 This section assumes you have created your discord bot already, that you have a discord server that you own or can have your bot run in (you need the server's ID i.e. guild ID for registering your commands, though you can also make the commands global, further reading [here](https://discord.com/developers/docs/interactions/application-commands#create-global-application-command)), and you have RCON enabled in the ECS section of the terraform code.
   - Further reading for setting up a discord bot 
-    - https://oozio.medium.com/serverless-discord-bot-55f95f26f743
+    - https://discord.com/developers/docs/getting-started
     - https://discord.com/developers/applications 
 
 Also for the lambda function, it needs all libraries packaged with it as per AWS documentation. Below was my method of doing so
