@@ -229,20 +229,23 @@ def interaction_reply(data, application_id, interaction_token):
 def component_response(data, interaction_id, interaction_token):
     url = f"https://discord.com/api/v10/interactions/{interaction_id}/{interaction_token}/callback"
     json = {
-        "content": data,
-        "components": [
-            {
-                "type": 1,
-                "components": [
-                    {
-                        "type": 2,
-                        "label": "Click me!",
-                        "style": 1,
-                        "custom_id": "click_one"
-                    }
-                ]
-            }
-        ]
+        "type": 4,
+        "data": {
+            "content": data,
+            "components": [
+                {
+                    "type": 1,
+                    "components": [
+                        {
+                            "type": 2,
+                            "label": "Click me!",
+                            "style": 1,
+                            "custom_id": "click_one"
+                        }
+                    ]
+                }
+            ]
+        }
     }
     r = requests.post(url, json=json)
     print(r)
