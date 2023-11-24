@@ -107,6 +107,7 @@ def lambda_handler(event, context):
 
     # MESSAGE_COMPONENT
     if body_json['type'] == 3:
+        print(body_json) # debug
         component_respond(f"You clicked a button!", body_json['id'], body_json['token'])
         exit(0)
 
