@@ -1,3 +1,4 @@
+from codecs import BOM_UTF16
 import boto3
 import os
 import nacl
@@ -107,8 +108,7 @@ def lambda_handler(event, context):
 
     # MESSAGE_COMPONENT
     if body_json['type'] == 3:
-        print(body_json) # debug
-        component_respond(f"You clicked a button!", body_json['id'], body_json['token'])
+        component_respond(f"You clicked the {body_json['data']['custom_id']} button!", body_json['id'], body_json['token'])
         exit(0)
 
 
