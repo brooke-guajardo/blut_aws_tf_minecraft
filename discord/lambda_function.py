@@ -250,7 +250,7 @@ def component_response(data, interaction_id, interaction_token):
         }
     }
     r = requests.post(url, json=json)
-    print(r)
+    print(f"Component Response: {r}")
 
 def interaction_update(data, application_id, interaction_token):
     url = f"https://discord.com/api/v10/webhooks/{application_id}/{interaction_token}/messages/@original"
@@ -258,4 +258,6 @@ def interaction_update(data, application_id, interaction_token):
         "content": data
     }  
     r = requests.patch(url, json=json)
+
+    print(f"Interaction Update Response: {r}")
 
