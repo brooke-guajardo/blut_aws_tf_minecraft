@@ -102,7 +102,7 @@ def lambda_handler(event, context):
             exit(0)
         
         if body_json['data']['name'] == 'menu':
-            component_reply(f"Menu:", disAppID, body_json['token'])
+            component_response(f"Menu:", body_json['id'], body_json['token'])
             exit(0)
 
     # MESSAGE_COMPONENT
@@ -226,19 +226,23 @@ def interaction_reply(data, application_id, interaction_token):
     }  
     r = requests.post(url, json=json)
 
-def component_reply(data, application_id, interaction_token):
-    url = f"https://discord.com/api/v10/webhooks/{application_id}/{interaction_token}"
+def component_response(data, interaction_id, interaction_token):
+    url = f"https://discord.com/api/v10/interactions/{interaction_id}/{interaction_token}/callback"
     json = {
         "content": data,
-        "components": [{
-            "type": 1,
-            "components": [{
-                "type": 2,
-                "label": "Click me!",
-                "style": 1,
-                "custom_id": "click_one"
-            }]
-        }]
+        "components": [
+            {
+                "type": 1,
+                "components": [
+                    {
+                        "type": 2,
+                        "label": "Click me!",
+                        "style": 1,
+                        "custom_id": "click_one"
+                    }
+                ]
+            }
+        ]
     }
     r = requests.post(url, json=json)
     print(r)
