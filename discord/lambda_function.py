@@ -255,7 +255,13 @@ def component_response(data, interaction_id, interaction_token):
 def interaction_update(data, application_id, interaction_token):
     url = f"https://discord.com/api/v10/webhooks/{application_id}/{interaction_token}/messages/@original"
     json = {
-        "content": data
+        "type": 4,
+        "data": {
+            "tts": False,
+            "content": data,
+            "embeds": [],
+            "allowed_mentions": {"parse": []}
+        }
     }  
     r = requests.patch(url, json=json)
 
