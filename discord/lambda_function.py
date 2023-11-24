@@ -38,7 +38,6 @@ def lambda_handler(event, context):
             })
         }
 
-
     # Bot Access and Channel Ping Pong Test
     if body_json['data']['name'] == 'ping':
         print("[INFO] attempting to pong...")
@@ -109,7 +108,7 @@ def command_handler(disAppID, rconPass, body_json, command_name, command_func, *
     try:
         interaction_response(f"ACK for {command_name} command", body_json['id'], body_json['token'])
         response = command_func(*args, **kwargs)
-        print(response) # Debug Output
+        print(f"Return from {command_func}: {response}") # Debug Output
         # Don't want boto3 output, it contains account info
         if command_func != 'scale_count':
             interaction_reply(response, disAppID, body_json['token'])
@@ -119,7 +118,6 @@ def command_handler(disAppID, rconPass, body_json, command_name, command_func, *
     except Exception as e:
         print(f"[ERROR] {command_name}: {e}")
         interaction_reply(f"[ERROR] {command_name}", disAppID, body_json['token'])
-    finally:
         return generate_response(f"[ERROR] {command_name}")   
 
 def multi_command_handler(disAppID, rconPass, body_json, command_name, function_list, *args, **kwargs):
@@ -133,12 +131,10 @@ def multi_command_handler(disAppID, rconPass, body_json, command_name, function_
                 interaction_reply(response, disAppID, body_json['token'])
             else:
                 interaction_reply(f"Scaling completed.", disAppID, body_json['token'])
-
         return generate_response(f"End of {command_name} command")
     except Exception as e:
         print(f"[ERROR] {command_name}: {e}")
         interaction_reply(f"[ERROR] {command_name}", disAppID, body_json['token'])
-    finally:
         return generate_response(f"[ERROR] {command_name}")   
 
 def generate_response(data, status_code=200):
