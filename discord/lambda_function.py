@@ -229,7 +229,7 @@ def interaction_reply(data, application_id, interaction_token):
 def component_reply(data, interaction_id, interaction_token):
     url = f"https://discord.com/api/v10/interactions/{interaction_id}/{interaction_token}/callback"
     json = {
-        "content": data
+        "content": data,
         "components": [{
             "type": 1,
             "components": [{
