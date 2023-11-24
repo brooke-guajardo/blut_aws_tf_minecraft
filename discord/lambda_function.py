@@ -49,7 +49,6 @@ def lambda_handler(event, context):
     if body_json['data']['name'] == 'get_ip':
         command_handler(
             disAppID,
-            rconPass,
             body_json,
             "get_ip",
             get_ip,
@@ -58,13 +57,12 @@ def lambda_handler(event, context):
 
     if body_json['data']['name'] == 'turn_off_mc':
         function_list = [
-            (rcon_list, (rconPass)),
-            (rcon_save, (rconPass)),
-            (scale_count, (0))
+            (rcon_list, (rconPass,)),
+            (rcon_save, (rconPass,)),
+            (scale_count, (0,))
         ]
         multi_command_handler(
             disAppID,
-            rconPass,
             body_json,
             "turn_off_mc",
             function_list
@@ -74,7 +72,6 @@ def lambda_handler(event, context):
     if body_json['data']['name'] == 'turn_on_mc':
         command_handler(
             disAppID,
-            rconPass,
             body_json,
             "turn_on_mc",
             scale_count,
@@ -85,7 +82,6 @@ def lambda_handler(event, context):
     if body_json['data']['name'] == 'who_online':
         command_handler(
             disAppID,
-            rconPass,
             body_json,
             "who_online",
             rcon_list,
@@ -96,7 +92,6 @@ def lambda_handler(event, context):
     if body_json['data']['name'] == 'save_mc':
         command_handler(
             disAppID,
-            rconPass,
             body_json,
             "who_online",
             rcon_save,
@@ -109,7 +104,7 @@ def lambda_handler(event, context):
     print(f"[ERROR] Command made it to end without properly being handled. Either the command is invalid or the above did not exit properly.")
     interaction_reply(f"[ERROR] End of Lambda", disAppID, body_json['token'])
 
-def command_handler(disAppID, rconPass, body_json, command_name, command_func, *args, **kwargs):
+def command_handler(disAppID, body_json, command_name, command_func, *args, **kwargs):
     try:
         interaction_response(f"ACK for {command_name} command", body_json['id'], body_json['token'])
         response = command_func(*args, **kwargs)
@@ -123,7 +118,7 @@ def command_handler(disAppID, rconPass, body_json, command_name, command_func, *
         print(f"[ERROR] {command_name}: {e}")
         interaction_reply(f"[ERROR] {command_name}", disAppID, body_json['token'])
 
-def multi_command_handler(disAppID, rconPass, body_json, command_name, function_list, *args, **kwargs):
+def multi_command_handler(disAppID, body_json, command_name, function_list, *args, **kwargs):
     try:
         interaction_response(f"ACK for {command_name} command", body_json['id'], body_json['token'])
         for func, func_args in function_list:
