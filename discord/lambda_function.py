@@ -102,13 +102,12 @@ def lambda_handler(event, context):
             exit(0)
         
         if body_json['data']['name'] == 'menu':
-            component_response(f"Menu:", body_json['id'], body_json['token'])
+            component_menu(f"Menu:", body_json['id'], body_json['token'])
             exit(0)
 
     # MESSAGE_COMPONENT
     if body_json['type'] == 3:
-        interaction_reply(f"You clicked a button! IR", disAppID, body_json['token'])
-        interaction_update(f"You clicked a button! IU", disAppID, body_json['token'])
+        component_respond(f"You clicked a button! IR", body_json['id'], body_json['token'])
         exit(0)
 
 
@@ -221,6 +220,7 @@ def interaction_response(data, interaction_id, interaction_token):
         }
     }
     r = requests.post(url, json=json)
+    print(f"Interaction Response return: {r}")
 
 def interaction_reply(data, application_id, interaction_token):
     url = f"https://discord.com/api/v10/webhooks/{application_id}/{interaction_token}"
@@ -230,7 +230,7 @@ def interaction_reply(data, application_id, interaction_token):
     }  
     r = requests.post(url, json=json)
 
-def component_response(data, interaction_id, interaction_token):
+def component_menu(data, interaction_id, interaction_token):
     # Create Interaction Response
     url = f"https://discord.com/api/v10/interactions/{interaction_id}/{interaction_token}/callback"
     json = {
@@ -260,7 +260,7 @@ def component_response(data, interaction_id, interaction_token):
         }
     }
     r = requests.post(url, json=json)
-    print(f"Component Response: {r}")
+    print(f"Component Menu return: {r}")
 
 def interaction_update(data, application_id, interaction_token):
     url = f"https://discord.com/api/v10/webhooks/{application_id}/{interaction_token}/messages/@original"
@@ -271,6 +271,15 @@ def interaction_update(data, application_id, interaction_token):
         }
     }  
     r = requests.patch(url, json=json)
+    print(f"Interaction Update return: {r}")
 
-    print(f"Interaction Update Response: {r}")
-
+def component_respond(data, interaction_id, interaction_token):
+    url = f"https://discord.com/api/v10/interactions/{interaction_id}/{interaction_token}/callback"
+    json = {
+        "type": 4,
+        "data": {
+            "content": data
+        }
+    }
+    r = requests.post(url, json=json)
+    print(f"Component Respond return: {r}")
