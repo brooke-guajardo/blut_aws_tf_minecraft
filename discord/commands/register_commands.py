@@ -43,6 +43,11 @@ commands_to_register = [
         "name": "save_mc",
         "type": 1,
         "description": "Run RCON /save-all to save the world."
+    },
+    {
+        "name": "menu",
+        "type": 1,
+        "description": "List available commands in button format."
     }
 ]
 
