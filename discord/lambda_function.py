@@ -107,7 +107,8 @@ def lambda_handler(event, context):
 
     # MESSAGE_COMPONENT
     if body_json['type'] == 3:
-        interaction_reply(f"You clicked a button!", disAppID, body_json['token'])
+        interaction_reply(f"You clicked a button! IR", disAppID, body_json['token'])
+        interaction_update(f"You clicked a button! IU", disAppID, body_json['token'])
         exit(0)
 
 
@@ -211,6 +212,7 @@ def rcon_list(rpass):
     return rcon_response[:-4]
         
 def interaction_response(data, interaction_id, interaction_token):
+    # Create Interaction Response
     url = f"https://discord.com/api/v10/interactions/{interaction_id}/{interaction_token}/callback"
     json = {
         "type": 4,
@@ -222,12 +224,14 @@ def interaction_response(data, interaction_id, interaction_token):
 
 def interaction_reply(data, application_id, interaction_token):
     url = f"https://discord.com/api/v10/webhooks/{application_id}/{interaction_token}"
+    print(url)
     json = {
         "content": data
     }  
     r = requests.post(url, json=json)
 
 def component_response(data, interaction_id, interaction_token):
+    # Create Interaction Response
     url = f"https://discord.com/api/v10/interactions/{interaction_id}/{interaction_token}/callback"
     json = {
         "type": 4,
@@ -239,9 +243,15 @@ def component_response(data, interaction_id, interaction_token):
                     "components": [
                         {
                             "type": 2,
-                            "label": "Click me!",
+                            "label": "Save Server Data",
                             "style": 1,
-                            "custom_id": "click_one"
+                            "custom_id": "mc_save"
+                        },
+                        {
+                            "type": 2,
+                            "label": "Check who is online",
+                            "style": 1,
+                            "custom_id": "rcon_list"
                         }
                     ]
                 }
