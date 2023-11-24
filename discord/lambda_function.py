@@ -57,20 +57,18 @@ def lambda_handler(event, context):
         )
 
     if body_json['data']['name'] == 'turn_off_mc':
-        try:
-            interaction_response(f"ACK turning off MC server", body_json['id'],body_json['token'])
-            rcon_response = rcon_save(rconPass)
-            print(f"{rcon_response}")
-            interaction_reply(f"RCON saving server.\n{rcon_response}", disAppID, body_json['token'])
-            boto_response = scale_count(0)
-            print(f"{boto_response}")
-            interaction_reply(f"Boto3 scaled down server", disAppID, body_json['token'])
-            return generate_response(f"end of turning off MC server")
-        except Exception as e:
-            print(f"[ERROR] turn_off_mc: {e}")
-            interaction_reply(f"[ERROR] turn_off_mc", disAppID, body_json['token'])
-        finally:
-            return generate_response(f"[ERROR] turn_off_mc")
+        function_list = [
+            (rcon_list, (rconPass)),
+            (rcon_save, (rconPass)),
+            (scale_count, (0))
+        ]
+        multi_command_handler(
+            disAppID,
+            rconPass,
+            body_json,
+            "turn_off_mc",
+            function_list
+        )
 
     if body_json['data']['name'] == 'turn_on_mc':
         command_handler(
@@ -111,13 +109,31 @@ def command_handler(disAppID, rconPass, body_json, command_name, command_func, *
     try:
         interaction_response(f"ACK for {command_name} command", body_json['id'], body_json['token'])
         response = command_func(*args, **kwargs)
-        # Debug Output
-        print(repsonse)
+        print(response) # Debug Output
         # Don't want boto3 output, it contains account info
         if command_func != 'scale_count':
             interaction_reply(response, disAppID, body_json['token'])
         else:
             interaction_reply(f"Scaling completed.", disAppID, body_json['token'])
+        return generate_response(f"End of {command_name} command")
+    except Exception as e:
+        print(f"[ERROR] {command_name}: {e}")
+        interaction_reply(f"[ERROR] {command_name}", disAppID, body_json['token'])
+    finally:
+        return generate_response(f"[ERROR] {command_name}")   
+
+def multi_command_handler(disAppID, rconPass, body_json, command_name, function_list, *args, **kwargs):
+    try:
+        interaction_response(f"ACK for {command_name} command", body_json['id'], body_json['token'])
+        for func, func_args in func_list:
+            response = func(*func_args, **kwargs)
+            print(f"Function: {func} \nResponse: {response}") # Debug Output
+            # Don't want boto3 output, it contains account info
+            if func != 'scale_count':
+                interaction_reply(response, disAppID, body_json['token'])
+            else:
+                interaction_reply(f"Scaling completed.", disAppID, body_json['token'])
+
         return generate_response(f"End of {command_name} command")
     except Exception as e:
         print(f"[ERROR] {command_name}: {e}")
