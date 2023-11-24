@@ -107,7 +107,7 @@ def lambda_handler(event, context):
 
     # MESSAGE_COMPONENT
     if body_json['type'] == 3:
-        interaction_update(f"You clicked a button!", disAppID, body_json['token'])
+        interaction_reply(f"You clicked a button!", disAppID, body_json['token'])
         exit(0)
 
 
@@ -256,8 +256,7 @@ def interaction_update(data, application_id, interaction_token):
     json = {
         "type": 4,
         "data": {
-            "content": data,
-            "components": []
+            "content": data
         }
     }  
     r = requests.patch(url, json=json)
