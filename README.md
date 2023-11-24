@@ -1,19 +1,29 @@
-# Fargate Instructions
+# Welcome to my Repo
+This is just a way for my friends and I can enjoy some MC that's hopefully a bit more cost effective than hosting services. As well as give more control! As the about says, this is an ECS Fargate Minecraft server that uses a Discord bot that runs on a Lambda with an API Gateway Trigger for slash command management. 
 
-## Create ECR
+Happy to answer any questions, I'd like to make this more generic for others to use. For now it does have configs that are more tuned to what my friends and I are playing.
+
+# Setup Instructions
+
+## 1. Create AWS ECR
 ```bash
 # env vars set NOT RECOMMMENDED (:
 export AWS_ACCESS_KEY_ID=your_aws_access_key
 export AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
 
-cd ecr
+git clone https://github.com/brooke-guajardo/blut_aws_tf_minecraft.git
+cd blut_aws_tf_minecraft/ecr
 terraform init
 terraform apply
 ```
 
-## Build image with non-auto download files copied over
+## 2. Build Docker Image and Push to ECR
+ Since we are leveraging the auto download handled by Curse Forge's API, we have to handle mods that owners have not enabled auto downloads. This requires you to locally download the mods, so that when building the docker file, the mods' jar files are copied over. More details [here](https://docker-minecraft-server.readthedocs.io/en/latest/mods-and-plugins/curseforge-files/).
 
-Note: Below I have `v1.0.0` this value needs to match what you put in the ecs/ecs.tf file. And if you ever rebuild the image, you need to bump the version since the ECR was set to immutable. 
+I found what files I needed to manually download by locally running the docker image, more detailed steps [here](./docs/manual_downloads.md).
+
+### Note: 
+Below I have `v1.0.0` this value needs to match what you put in the ecs/ecs.tf file. And if you ever rebuild the image, you need to bump the version since the ECR is set to immutable. 
 ```bash
 # env vars set NOT RECOMMMENDED (:
 export AWS_ACCESS_KEY_ID=your_aws_access_key
@@ -23,6 +33,7 @@ export AWS_REGION=your_aws_region
 export TF_VAR_public_key=your_public_key
 
 cd build
+# before the docker build download and put into the build folder your jar files!
 docker build . -t jardo_minecraft:v1.0.0
 docker image ls # to confirm it was made properly, get the IMAGE_ID
 aws ecr get-login-password --region "${AWS_REGION}" | docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com
@@ -30,7 +41,7 @@ docker tag IMAGE_ID "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com/mi
 docker push "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com/minecraft:v1.0.0
 ```
 
-## Deploy ECS, EFS, VPC and Security Groups
+## 3. Deploy ECS, EFS, VPC and Security Groups
 ```bash
 # env vars set NOT RECOMMMENDED (:
 export AWS_ACCESS_KEY_ID=your_aws_access_key
@@ -43,6 +54,54 @@ cd ecs
 terraform init
 terraform apply
 ```
+
+## 4. Deploy Lambda, API Gateway, and supporting Infrastructure (Discord Bot)
+This section assumes you have created your discord bot already, that you have a discord server that you own or can have your bot run in (you need the server's ID i.e. guild ID for registering your commands, though you can also make the commands global, further reading [here](https://discord.com/developers/docs/interactions/application-commands#create-global-application-command)), and you have RCON enabled in the ECS section of the terraform code.
+  - Further reading for setting up a discord bot 
+    - https://oozio.medium.com/serverless-discord-bot-55f95f26f743
+    - https://discord.com/developers/applications 
+
+Also for the lambda function, it needs all libraries packaged with it as per AWS documentation. Below was my method of doing so
+  - Further reading https://docs.aws.amazon.com/lambda/latest/dg/python-package.html
+
+```bash
+# env vars set NOT RECOMMMENDED (:
+export AWS_ACCESS_KEY_ID=your_aws_access_key
+export AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
+export TF_VAR_rcon_pass=your_rcon_password
+export TF_VAR_public_key=your_public_key
+export TF_VAR_discord_app_id=your_discord_bot_app_id
+export DISCORD_SERVER_ID=your_discord_server_id
+export DISCORD_BOT_TOKEN=your_discord_bot_token
+
+cd discord
+cd commands
+# the output should tell you if they succeed
+# also they'll show up in the server you are testing in if it works
+python3 register_commands.py
+cd .. # or back into the discord directory
+# create python virtual environment
+python3 -m venv venv
+source venv/bin/activate
+pip3 install pipreqs
+# this will make the requirements.txt file
+pipreqs .
+pip3 install -r requirements.txt
+cd venv/lib/python3.9/site-packages/
+zip -r ../../../../deployment_package.zip .
+# change directory back to discord/
+cd -
+# add the lamba function to the zip
+zip deployment_package.zip lambda_function.py
+terraform init
+terraform apply
+```
+
+The output from this terraform will give you the APIGW url that you need to put into the settings of your discord bot.
+  - https://discord.com/developers/applications
+  - Click on your bot, and it should be the 'INTERACTIONS ENDPOINT URL'
+  - Add your URL and save, if it errors, good luck o7, hopefully it works.
+    - If any errors do occur, be sure to check your cloudwatch logs in the AWS console
 
 # Client instructions
 - Install CurseForge: https://www.curseforge.com/download/app
@@ -60,6 +119,18 @@ terraform apply
 - Once launcher has loaded click MULTIPLAYER
 - Select direct connect and put IP without port (I'll provide from AWS console)
 - done :tada:
+
+## Discord Bot Usage
+Full Command List
+- `/save_mc` to ad hoc save the server
+- `/who_online` to see who is online, may error if server is off
+- `/get_ip`
+- `/turn_on_mc`
+- `/turn_off_mc` will RCON save and then shut off server, also puts message in all chat
+
+To get the service IP address please use `/get_ip` don't worry if it fails, the lambda is finicky, just wait a moment and run the command again. 
+If get_ip returns "list index out of range" it means the server is not up, no worries! Turn on the minecraft server with `/turn_on_mc` wait a minute or two (at most like 5 mins?) and you should be able to get the IP
+When done, you should be able to run `/turn_off_mc` from discord this command will now run RCON /save-all against the server before scaling down the instances to 0.
 
 ## References
 - https://hub.docker.com/r/itzg/minecraft-server/tags
@@ -80,7 +151,7 @@ terraform apply
 - https://developer.hashicorp.com/terraform/tutorials/aws/lambda-api-gateway#clone-example-configuration
 - https://github.com/oozio/discord_aws_bot_demo/tree/master
 
-## Pre-generated worlds
+## Pre-generated worlds (TODO)
 1. Reference branch `init_pregen` you will need a folder in the build directory and some changes to the docker file. 
 2. Then 2 env vars that you only want to run once against your ECS or else you'll lose progress that's been written to your EFS.
 3. Once you have those changes
