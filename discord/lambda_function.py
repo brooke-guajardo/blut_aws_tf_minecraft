@@ -1,4 +1,3 @@
-from codecs import BOM_UTF16
 import boto3
 import os
 import nacl
@@ -247,13 +246,19 @@ def component_menu(data, interaction_id, interaction_token):
                             "type": 2,
                             "label": "Save Server Data",
                             "style": 1,
-                            "custom_id": "mc_save"
+                            "custom_id": "mc_save_bt"
                         },
                         {
                             "type": 2,
-                            "label": "Check who is online",
+                            "label": "Check Who is Online",
                             "style": 1,
-                            "custom_id": "rcon_list"
+                            "custom_id": "rcon_list_bt"
+                        },
+                        {
+                            "type": 2,
+                            "label": "Get Server IP",
+                            "style": 1,
+                            "custom_id": "get_ip_bt"
                         }
                     ]
                 },
@@ -264,13 +269,13 @@ def component_menu(data, interaction_id, interaction_token):
                             "type": 2,
                             "label": "Turn on MC Server",
                             "style": 3,
-                            "custom_id": "mc_on"
+                            "custom_id": "mc_on_bt"
                         },
                         {
                             "type": 2,
                             "label": "Turn off MC Server",
                             "style": 4,
-                            "custom_id": "mc_off"
+                            "custom_id": "mc_off_bt"
                         }
                     ]
                 }
