@@ -53,6 +53,7 @@ commands_to_register = [
 
 # Register commands in bulk
 for command in commands_to_register:
+    time.sleep(2)
     command_url = url
     response = requests.post(command_url, json=command, headers=headers)
 
@@ -63,4 +64,3 @@ for command in commands_to_register:
     else:
         print(f"Failed to register command '{command['name']}'. Status code: {response.status_code}")
         print(response.text)  # To see the error message from Discord, if any
-    time.sleep(2)
