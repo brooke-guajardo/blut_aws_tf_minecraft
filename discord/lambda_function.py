@@ -107,7 +107,9 @@ def lambda_handler(event, context):
 
     # MESSAGE_COMPONENT
     if body_json['type'] == 3:
-        interaction_reply(f"You clicked a button!", disAppID, body_json['token'])
+        print(f"this is a component we got here")
+        interaction_update(f"You clicked a button!", disAppID, body_json['token'])
+        exit(0)
 
 
     # I would return 404 here but then the command will just error with no info
