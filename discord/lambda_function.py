@@ -45,12 +45,11 @@ def lambda_handler(event, context):
         if body_json['data']['name'] == 'ping':
             print("[INFO] attempting to pong...")
             interaction_response(f"po-", body_json['id'],body_json['token'])
-            interaction_reply(f"-ng", disAppID, body_json['token'])
+            interaction_reply(f"-ng", body_json['token'])
             exit(0)
 
         if body_json['data']['name'] == 'get_ip':
             command_handler(
-                disAppID,
                 body_json,
                 "get_ip",
                 get_ip,
@@ -64,7 +63,6 @@ def lambda_handler(event, context):
                 (scale_count, (0,))
             ]
             multi_command_handler(
-                disAppID,
                 body_json,
                 "turn_off_mc",
                 function_list
@@ -73,7 +71,6 @@ def lambda_handler(event, context):
 
         if body_json['data']['name'] == 'turn_on_mc':
             command_handler(
-                disAppID,
                 body_json,
                 "turn_on_mc",
                 scale_count,
@@ -83,7 +80,6 @@ def lambda_handler(event, context):
 
         if body_json['data']['name'] == 'who_online':
             command_handler(
-                disAppID,
                 body_json,
                 "who_online",
                 rcon_list,
@@ -93,7 +89,6 @@ def lambda_handler(event, context):
 
         if body_json['data']['name'] == 'save_mc':
             command_handler(
-                disAppID,
                 body_json,
                 "who_online",
                 rcon_save,
@@ -110,7 +105,6 @@ def lambda_handler(event, context):
 
         if body_json['data']['custom_id'] == "mc_save_bt":
             command_handler(
-                disAppID,
                 body_json,
                 "who_online",
                 rcon_save,
@@ -120,7 +114,6 @@ def lambda_handler(event, context):
 
         if body_json['data']['custom_id'] == "rcon_list_bt":
             command_handler(
-                disAppID,
                 body_json,
                 "who_online",
                 rcon_list,
@@ -130,7 +123,6 @@ def lambda_handler(event, context):
 
         if body_json['data']['custom_id'] == "get_ip_bt":
             command_handler(
-                disAppID,
                 body_json,
                 "get_ip",
                 get_ip,
@@ -139,7 +131,6 @@ def lambda_handler(event, context):
 
         if body_json['data']['custom_id'] == "mc_on_bt":
             command_handler(
-                disAppID,
                 body_json,
                 "turn_on_mc",
                 scale_count,
@@ -154,7 +145,6 @@ def lambda_handler(event, context):
                 (scale_count, (0,))
             ]
             multi_command_handler(
-                disAppID,
                 body_json,
                 "turn_off_mc",
                 function_list
@@ -166,23 +156,23 @@ def lambda_handler(event, context):
     # I would return 404 here but then the command will just error with no info
     # So pivoting to interaction reply so there is context in discord
     print(f"[ERROR] Command made it to end without properly being handled. Either the command is invalid or the above did not exit properly.")
-    interaction_reply(f"[ERROR] End of Lambda", disAppID, body_json['token'])
+    interaction_reply(f"[ERROR] End of Lambda", body_json['token'])
 
-def command_handler(disAppID, body_json, command_name, command_func, *args, **kwargs):
+def command_handler(body_json, command_name, command_func, *args, **kwargs):
     try:
         interaction_response(f"ACK for {command_name} command", body_json['id'], body_json['token'])
         response = command_func(*args, **kwargs)
         print(f"Return from {command_func}: {response}") # Debug Output
         # Don't want boto3 output, it contains account info
         if command_func != scale_count:
-            interaction_reply(response, disAppID, body_json['token'])
+            interaction_reply(response, body_json['token'])
         else:
-            interaction_reply(f"Scaling completed.", disAppID, body_json['token'])
+            interaction_reply(f"Scaling completed.", body_json['token'])
     except Exception as e:
         print(f"[ERROR] {command_name}: {e}")
-        interaction_reply(f"[ERROR] {command_name}", disAppID, body_json['token'])
+        interaction_reply(f"[ERROR] {command_name}", body_json['token'])
 
-def multi_command_handler(disAppID, body_json, command_name, function_list, *args, **kwargs):
+def multi_command_handler(body_json, command_name, function_list, *args, **kwargs):
     try:
         interaction_response(f"ACK for {command_name} command", body_json['id'], body_json['token'])
         for func, func_args in function_list:
@@ -190,12 +180,12 @@ def multi_command_handler(disAppID, body_json, command_name, function_list, *arg
             print(f"Function: {func} \nResponse: {response}") # Debug Output
             # Don't want boto3 output, it contains account info
             if func != scale_count:
-                interaction_reply(response, disAppID, body_json['token'])
+                interaction_reply(response, body_json['token'])
             else:
-                interaction_reply(f"Scaling completed.", disAppID, body_json['token'])
+                interaction_reply(f"Scaling completed.", body_json['token'])
     except Exception as e:
         print(f"[ERROR] {command_name}: {e}")
-        interaction_reply(f"[ERROR] {command_name}", disAppID, body_json['token'])
+        interaction_reply(f"[ERROR] {command_name}", body_json['token'])
 
 def get_ip():
     client = boto3.client('ecs',region_name='us-east-1')
@@ -274,9 +264,9 @@ def interaction_response(data, interaction_id, interaction_token):
     r = requests.post(url, json=json)
     print(f"Interaction Response return: {r}")
 
-def interaction_reply(data, application_id, interaction_token):
+def interaction_reply(data, interaction_token):
     # Create Followup Message
-    url = f"https://discord.com/api/v10/webhooks/{application_id}/{interaction_token}"
+    url = f"https://discord.com/api/v10/webhooks/{disAppID}/{interaction_token}"
     json = {
         "content": data
     }  
