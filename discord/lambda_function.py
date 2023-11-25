@@ -107,9 +107,61 @@ def lambda_handler(event, context):
 
     # MESSAGE_COMPONENT
     if body_json['type'] == 3:
-        component_respond(f"You clicked the {body_json['data']['custom_id']} button!", body_json['id'], body_json['token'])
-        exit(0)
 
+        if body_json['data']['custom_id'] == "mc_save_bt":
+            command_handler(
+                disAppID,
+                body_json,
+                "who_online",
+                rcon_save,
+                rconPass
+            )
+            exit(0)
+
+        if body_json['data']['custom_id'] == "rcon_list_bt":
+            command_handler(
+                disAppID,
+                body_json,
+                "who_online",
+                rcon_list,
+                rconPass
+            )
+            exit(0)
+
+        if body_json['data']['custom_id'] == "get_ip_bt":
+            command_handler(
+                disAppID,
+                body_json,
+                "get_ip",
+                get_ip,
+            )
+            exit(0)
+
+        if body_json['data']['custom_id'] == "mc_on_bt":
+            command_handler(
+                disAppID,
+                body_json,
+                "turn_on_mc",
+                scale_count,
+                1
+            )
+            exit(0)
+
+        if body_json['data']['custom_id'] == "mc_off_bt":
+            function_list = [
+                (rcon_list, (rconPass,)),
+                (rcon_save, (rconPass,)),
+                (scale_count, (0,))
+            ]
+            multi_command_handler(
+                disAppID,
+                body_json,
+                "turn_off_mc",
+                function_list
+            )
+            exit(0)
+
+            
 
     # I would return 404 here but then the command will just error with no info
     # So pivoting to interaction reply so there is context in discord
@@ -289,7 +341,7 @@ def component_menu(data, interaction_id, interaction_token):
 def component_respond(data, interaction_id, interaction_token):
     url = f"https://discord.com/api/v10/interactions/{interaction_id}/{interaction_token}/callback"
     json = {
-        "type": 4,
+        "type": 7,
         "data": {
             "content": data
         }
