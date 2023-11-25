@@ -7,14 +7,14 @@ import mctools
 from mctools import RCONClient
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
+rconPass = os.environ['RCON_PASSWORD']
+botPubKey = os.environ['PUBLIC_KEY']
+disAppID = os.environ['DISCORD_APP_ID']
+verify_key = VerifyKey(bytes.fromhex(botPubKey))
+
 
 def lambda_handler(event, context):
     print(event)
-    rconPass = os.environ['RCON_PASSWORD']
-    botPubKey = os.environ['PUBLIC_KEY']
-    disAppID = os.environ['DISCORD_APP_ID']
-    verify_key = VerifyKey(bytes.fromhex(botPubKey))
-
     signature = event['headers']['x-signature-ed25519']
     timestamp = event['headers']['x-signature-timestamp']
     body = event['body']
