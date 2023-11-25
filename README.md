@@ -127,6 +127,9 @@ Full Command List
 - `/get_ip`
 - `/turn_on_mc`
 - `/turn_off_mc` will RCON save and then shut off server, also puts message in all chat
+- `/menu` to bring up the above commands in a UI menu with buttons
+![image](https://github.com/brooke-guajardo/blut_aws_tf_minecraft/assets/102095955/50e0a581-87bb-4899-9ea3-4008f40deac1)
+
 
 To get the service IP address please use `/get_ip` don't worry if it fails, the lambda is finicky, just wait a moment and run the command again. 
 If get_ip returns "list index out of range" it means the server is not up, no worries! Turn on the minecraft server with `/turn_on_mc` wait a minute or two (at most like 5 mins?) and you should be able to get the IP
