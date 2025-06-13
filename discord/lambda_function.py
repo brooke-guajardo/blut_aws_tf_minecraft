@@ -41,115 +41,19 @@ def lambda_handler(event, context):
 
     # APPLICATION_COMMAND
     if body_json['type'] == 2:
-
-        if body_json['data']['name'] == 'ping':
-            print("[INFO] attempting to pong...")
-            interaction_response(f"po-", body_json['id'],body_json['token'])
-            interaction_reply(f"-ng", body_json['token'])
-            exit(0)
-
-        if body_json['data']['name'] == 'get_ip':
-            command_handler(
-                body_json,
-                "get_ip",
-                get_ip,
-            )
-            exit(0)
-
-        if body_json['data']['name'] == 'turn_off_mc':
-            function_list = [
-                (rcon_list, (rconPass,)),
-                (rcon_save, (rconPass,)),
-                (scale_count, (0,))
-            ]
-            multi_command_handler(
-                body_json,
-                "turn_off_mc",
-                function_list
-            )
-            exit(0)
-
-        if body_json['data']['name'] == 'turn_on_mc':
-            command_handler(
-                body_json,
-                "turn_on_mc",
-                scale_count,
-                1
-            )
-            exit(0)
-
-        if body_json['data']['name'] == 'who_online':
-            command_handler(
-                body_json,
-                "who_online",
-                rcon_list,
-                rconPass
-            )
-            exit(0)
-
-        if body_json['data']['name'] == 'save_mc':
-            command_handler(
-                body_json,
-                "who_online",
-                rcon_save,
-                rconPass
-            )
-            exit(0)
-        
-        if body_json['data']['name'] == 'menu':
-            component_menu(f"Menu:", body_json['id'], body_json['token'])
-            exit(0)
+        command_name = body_json['data']['name']
+        handler = COMMAND_HANDLERS.get(command_name)
+        if handler:
+            handler(body_json)
+            return
 
     # MESSAGE_COMPONENT
     if body_json['type'] == 3:
-
-        if body_json['data']['custom_id'] == "mc_save_bt":
-            command_handler(
-                body_json,
-                "who_online",
-                rcon_save,
-                rconPass
-            )
-            exit(0)
-
-        if body_json['data']['custom_id'] == "rcon_list_bt":
-            command_handler(
-                body_json,
-                "who_online",
-                rcon_list,
-                rconPass
-            )
-            exit(0)
-
-        if body_json['data']['custom_id'] == "get_ip_bt":
-            command_handler(
-                body_json,
-                "get_ip",
-                get_ip,
-            )
-            exit(0)
-
-        if body_json['data']['custom_id'] == "mc_on_bt":
-            command_handler(
-                body_json,
-                "turn_on_mc",
-                scale_count,
-                1
-            )
-            exit(0)
-
-        if body_json['data']['custom_id'] == "mc_off_bt":
-            function_list = [
-                (rcon_list, (rconPass,)),
-                (rcon_save, (rconPass,)),
-                (scale_count, (0,))
-            ]
-            multi_command_handler(
-                body_json,
-                "turn_off_mc",
-                function_list
-            )
-            exit(0)
+        component_id = body_json['data']['custom_id']
+        handler = COMPONENT_HANDLERS.get(component_id)
+        if handler:
+            handler(body_json)
+            return
 
             
 
@@ -338,3 +242,60 @@ def component_respond(data, interaction_id, interaction_token):
     }
     r = requests.post(url, json=json)
     print(f"Component Respond return: {r}")
+
+
+# Individual command handlers used by lambda_handler
+def handle_ping(body_json):
+    print("[INFO] attempting to pong...")
+    interaction_response("po-", body_json['id'], body_json['token'])
+    interaction_reply("-ng", body_json['token'])
+
+
+def handle_get_ip(body_json):
+    command_handler(body_json, "get_ip", get_ip)
+
+
+def handle_turn_off_mc(body_json):
+    function_list = [
+        (rcon_list, (rconPass,)),
+        (rcon_save, (rconPass,)),
+        (scale_count, (0,))
+    ]
+    multi_command_handler(body_json, "turn_off_mc", function_list)
+
+
+def handle_turn_on_mc(body_json):
+    command_handler(body_json, "turn_on_mc", scale_count, 1)
+
+
+def handle_who_online(body_json):
+    command_handler(body_json, "who_online", rcon_list, rconPass)
+
+
+def handle_save_mc(body_json):
+    command_handler(body_json, "who_online", rcon_save, rconPass)
+
+
+def handle_menu(body_json):
+    component_menu("Menu:", body_json['id'], body_json['token'])
+
+
+# Mappings for quick lookup
+COMMAND_HANDLERS = {
+    "ping": handle_ping,
+    "get_ip": handle_get_ip,
+    "turn_off_mc": handle_turn_off_mc,
+    "turn_on_mc": handle_turn_on_mc,
+    "who_online": handle_who_online,
+    "save_mc": handle_save_mc,
+    "menu": handle_menu,
+}
+
+
+COMPONENT_HANDLERS = {
+    "mc_save_bt": handle_save_mc,
+    "rcon_list_bt": handle_who_online,
+    "get_ip_bt": handle_get_ip,
+    "mc_on_bt": handle_turn_on_mc,
+    "mc_off_bt": handle_turn_off_mc,
+}
