@@ -7,6 +7,10 @@ on: workflow_dispatch
 permissions:
   contents: read
 
+env:
+  AWS_DEFAULT_REGION: ${{ env.AWS_REGION }}
+  AWS_DEFAULT_OUTPUT: json
+
 jobs:
   deploy:
     name: Deploy
