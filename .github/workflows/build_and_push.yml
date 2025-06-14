@@ -38,12 +38,12 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: ${{ github.ref_name }}
-        ECR_REPOSITORY: ${{ env.COMMIT_SHORT_SHA }}
+        IMAGE_TAG: ${{ env.COMMIT_SHORT_SHA }}
+        ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
       run: |
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
         cd build
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker build -t $IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
