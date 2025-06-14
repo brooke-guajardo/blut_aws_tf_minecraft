@@ -79,20 +79,12 @@ cd commands
 # the output should tell you if they succeed
 # also they'll show up in the server you are testing in if it works
 python3 register_commands.py
-cd .. # or back into the discord directory
-# create python virtual environment
-python3 -m venv venv
-source venv/bin/activate
-pip3 install pipreqs
-# this will make the requirements.txt file
-pipreqs .
-pip3 install -r requirements.txt
-cd venv/lib/python3.9/site-packages/
-zip -r ../../../../deployment_package.zip .
-# change directory back to discord/
-cd -
-# add the lamba function to the zip
-zip deployment_package.zip lambda_function.py
+# build and push lambda container
+cd .. # back into the discord directory
+docker build -t discord-lambda:latest .
+aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "$AWS_ACCOUNT_ID".dkr.ecr."$AWS_REGION".amazonaws.com
+docker tag discord-lambda:latest "$AWS_ACCOUNT_ID".dkr.ecr."$AWS_REGION".amazonaws.com/discord-lambda:latest
+docker push "$AWS_ACCOUNT_ID".dkr.ecr."$AWS_REGION".amazonaws.com/discord-lambda:latest
 terraform init
 terraform apply
 ```

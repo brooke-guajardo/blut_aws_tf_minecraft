@@ -16,3 +16,9 @@ variable "rcon_pass" {
 variable "discord_app_id" {
   description = "Discord bots APPLICATION ID"
 }
+
+variable "discord_lambda_image_tag" {
+  description = "Container image tag for the discord lambda"
+  type        = string
+  default     = "latest"
+}

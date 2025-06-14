@@ -1,15 +1,10 @@
 resource "aws_lambda_function" "blut_aws_tf_minecraft_lambda" {
   function_name = "blut_aws_tf_minecraft_lambda"
 
-  s3_bucket = aws_s3_bucket.lambda_bucket.id
-  s3_key    = aws_s3_object.lambda_load_python_artifact.key
-
-  runtime = "python3.9"
-  handler = "lambda_function.lambda_handler"
+  package_type = "Image"
+  image_uri    = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com/discord-lambda:${var.discord_lambda_image_tag}"
 
   timeout = 120
-
-  source_code_hash = filebase64sha256("${path.module}/deployment_package.zip")
 
   role = aws_iam_role.lambda_exec.arn
   environment {
